@@ -49,6 +49,23 @@ export type DailyHabit = { id?: number; date: string; habitId: string }
 export type SavedItem = { id: string; savedAt: string }
 export type AppSetting = { key: string; value: unknown }
 
+/** Zustand der Synchronisation (nur lokal, wird nie exportiert oder synchronisiert). */
+export type SyncState = {
+  id: 'me'
+  username: string
+  token: string
+  /** Datenschlüssel: nicht exportierbarer CryptoKey, bleibt im Browser */
+  dek: CryptoKey
+  /** Version auf dem Server, auf der der lokale Stand basiert */
+  version: number
+  /** Prüfsumme des lokalen Stands beim letzten erfolgreichen Abgleich */
+  lastHash: string | null
+  lastSyncAt?: string
+  conflict?: { serverVersion: number } | null
+  /** Sitzung abgelaufen: erneut anmelden */
+  loginRequired?: boolean
+}
+
 export class AppDB extends Dexie {
   userProfile!: EntityTable<UserProfile, 'id'>
   userProgress!: EntityTable<UserProgress, 'id'>
@@ -62,6 +79,7 @@ export class AppDB extends Dexie {
   savedRecipes!: EntityTable<SavedItem, 'id'>
   savedTips!: EntityTable<SavedItem, 'id'>
   appSettings!: EntityTable<AppSetting, 'key'>
+  syncState!: EntityTable<SyncState, 'id'>
 
   constructor(name = 'rueckbildung') {
     super(name)
@@ -92,6 +110,8 @@ export class AppDB extends Dexie {
       )
     // v3: Termine & Erinnerungen
     this.version(3).stores({ appointments: '++id, date' })
+    // v4: Sync-Zustand (Anmeldung, Schlüssel, Version)
+    this.version(4).stores({ syncState: 'id' })
   }
 }
 

@@ -32,6 +32,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
         // App Shell + gebündelter Inhalt (Übungen, Texte) sind vorab gecacht (Precache, Stale-While-Revalidate via Revisionen).
         // Für später ausgelagerte Medien/Inhalte:

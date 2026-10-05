@@ -1,0 +1,12 @@
+{
+  "name": "wochenbett-sync-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Speichert nur verschlüsselte Datenblöcke. Keine Abhängigkeiten, nutzt Node 22 (node:sqlite).",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node index.mjs",
+    "test": "node --test --no-warnings test/*.test.mjs"
+  }
+}

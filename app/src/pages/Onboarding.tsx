@@ -3,6 +3,7 @@ import { Button, Card, WarningBanner } from '../components'
 import { db } from '../db/db'
 import { DEFAULT_EQUIPMENT, EQUIPMENT } from '../domain/equipment'
 import type { BirthType, EquipmentId } from '../domain/types'
+import { LoginForm } from '../sync/SyncForms'
 import { suggestStartPhase, type ActivityLevel } from '../engine/progression'
 import { daysBetween, todayISO } from '../hooks/useUserState'
 
@@ -19,6 +20,7 @@ export function Onboarding() {
   const [clearance, setClearance] = useState(false)
   const [equipment, setEquipment] = useState<EquipmentId[]>(DEFAULT_EQUIPMENT)
   const [accepted, setAccepted] = useState(false)
+  const [login, setLogin] = useState(false)
   const valid = birthDate !== '' && birthDate <= todayISO() && birthType !== '' && level !== '' && accepted
   const phase = birthDate && level ? suggestStartPhase(daysBetween(birthDate), level) : null
 
@@ -28,6 +30,17 @@ export function Onboarding() {
     await db.userProfile.put({ id: 'me', birthDate, birthType, medicalClearance: clearance, createdAt: now })
     await db.userProgress.put({ id: 'me', currentPhase: suggestStartPhase(daysBetween(birthDate), level), updatedAt: now })
     await db.appSettings.put({ key: 'equipment', value: equipment })
+  }
+
+  if (login) {
+    return (
+      <main className="pt-safe pb-safe mx-auto max-w-md space-y-4 p-4">
+        <h1 className="text-2xl font-semibold">Anmelden</h1>
+        <p className="text-stone-600 dark:text-stone-400">Melde dich mit deinem Sync-Konto an, um deine Daten auf dieses Gerät zu holen.</p>
+        <Card><LoginForm /></Card>
+        <Button variant="ghost" onClick={() => setLogin(false)}>← Zurück</Button>
+      </main>
+    )
   }
 
   return (
@@ -89,6 +102,10 @@ export function Onboarding() {
       <Button className="w-full" disabled={!valid} onClick={save}>
         Los geht's
       </Button>
+      <Button variant="ghost" className="w-full" onClick={() => setLogin(true)}>
+        Ich habe schon ein Sync-Konto
+      </Button>
+      <p className="text-center text-sm text-stone-600 dark:text-stone-400">Ein Sync-Konto kannst du auch später unter Mehr → Sync & Sicherung anlegen.</p>
     </main>
   )
 }
