@@ -966,13 +966,13 @@ starke Erschöpfung
 
 ## 17.3 Offline Testing
 
-- [ ] Flugmodus
-- [ ] App neu laden
-- [ ] PWA komplett schließen
-- [ ] wieder öffnen
-- [ ] Workout starten
+- [x] Flugmodus _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
+- [x] App neu laden _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
+- [x] PWA komplett schließen _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
+- [x] wieder öffnen _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
+- [x] Workout starten _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
 - [ ] Audio abspielen
-- [ ] Daten speichern
+- [x] Daten speichern _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
 
 **Erklärung:** Die App muss die vorgesehenen Offline-Funktionen auch ohne Internet zuverlässig ausführen.
 
