@@ -22,7 +22,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 0.1 Medizinisches Sicherheitskonzept
 
-- [x] **Red-Flag-System definieren** _(Entwurf: docs/safety-concept.md, fachlich noch zu prüfen)_
+- [ ] **Red-Flag-System definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
   - ungewöhnlich starke oder zunehmende Blutung
   - Fieber
   - zunehmender starker Schmerz
@@ -34,7 +34,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Red Flags sind Situationen, bei denen die App nicht einfach eine leichtere Übung anbieten sollte. Stattdessen soll sie das Training stoppen und auf medizinische Abklärung hinweisen. Die konkrete Definition sollte fachlich geprüft werden.
 
-- [x] **Eskalationslogik definieren** _(Entwurf: docs/safety-concept.md, fachlich noch zu prüfen)_
+- [ ] **Eskalationslogik definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
 
   ```text
   Grün:
@@ -57,11 +57,11 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Die App benötigt unterschiedliche Reaktionen auf unterschiedliche Belastungszustände.
 
-- [x] **Keine Diagnosen durch die App** _(Entwurf: docs/safety-concept.md, fachlich noch zu prüfen)_
+- [ ] **Keine Diagnosen durch die App** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
 
   **Erklärung:** Die App darf beispielsweise nicht behaupten, dass eine Nutzerin eine Rektusdiastase oder andere Erkrankung hat. Sie darf nur Beobachtungen dokumentieren und auf mögliche Abklärungen hinweisen.
 
-- [x] **Kontraindikationen pro Übung definieren** _(Entwurf: docs/safety-concept.md, fachlich noch zu prüfen)_
+- [ ] **Kontraindikationen pro Übung definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
 
   **Erklärung:** Jede Übung erhält Sicherheitsinformationen, Abbruchkriterien sowie mögliche Regressionen.
 
@@ -69,11 +69,11 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 0.2 Medizinische Review-Struktur
 
-- [x] **Jeden medizinisch relevanten Content mit Quelle versehen** _(Entwurf: docs/content-governance.md, fachlich noch zu prüfen)_
+- [ ] **Jeden medizinisch relevanten Content mit Quelle versehen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
 
   **Erklärung:** Übungen, Red Flags, Beckenbodeninformationen und Ernährungsempfehlungen sollten nachvollziehbar sein.
 
-- [x] **Review-Datum hinterlegen** _(Entwurf: docs/content-governance.md, fachlich noch zu prüfen)_
+- [ ] **Review-Datum hinterlegen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
 
   Beispiel:
 
@@ -84,7 +84,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
   }
   ```
 
-- [x] **Evidence-Level einführen** _(Entwurf: docs/content-governance.md, fachlich noch zu prüfen)_
+- [ ] **Evidence-Level einführen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
 
   ```text
   strong
@@ -103,7 +103,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 0.3 Grundprinzip der Trainingslogik
 
-- [x] **Zeit seit Geburt nicht als alleinige Freigabe verwenden** _(Entwurf: docs/training-logic.md, fachlich noch zu prüfen)_
+- [ ] **Zeit seit Geburt nicht als alleinige Freigabe verwenden** _(Entwurf liegt vor: docs/training-logic.md, noch nicht geprüft)_
 
   Nicht:
 
@@ -127,7 +127,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
   heutige Trainingsoptionen
   ```
 
-- [x] **Readiness-System definieren** _(Entwurf: docs/training-logic.md, fachlich noch zu prüfen)_
+- [ ] **Readiness-System definieren** _(Entwurf liegt vor: docs/training-logic.md, noch nicht geprüft)_
 
   **Erklärung:** Vor dem Training werden Tagesform, Energie, Beschwerden und Reaktion auf die letzte Einheit abgefragt.
 
