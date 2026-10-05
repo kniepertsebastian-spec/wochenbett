@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Link } from 'react-router-dom'
-import { Card, HabitsCard, WarningBanner } from '../components'
+import { Card, HabitsCard, TipCard, WarningBanner } from '../components'
 import { db } from '../db/db'
 import { useUserState } from '../hooks/useUserState'
 
@@ -48,6 +48,7 @@ export function TodayPage() {
         <p className="text-sm text-stone-600 dark:text-stone-400">Der Check-in kommt immer zuerst, dann passt sich der Vorschlag an.</p>
       </Card>
       <HabitsCard />
+      <TipCard ctx={{}} />
       {stats && stats.total > 0 && (
         <Card>
           <p>{stats.total} {stats.total === 1 ? 'Einheit' : 'Einheiten'} abgeschlossen</p>

@@ -37,3 +37,15 @@
     }
   }
 }
+
+/* Druck / PDF: Navigation und Bedienelemente ausblenden */
+@media print {
+  nav,
+  .fixed {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

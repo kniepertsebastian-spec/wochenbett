@@ -728,7 +728,7 @@ Beispiele:
 
 ## 12.1 Mikronährstoff-Lexikon
 
-- [ ] **50–60 Lebensmittel**
+- [x] **50–60 Lebensmittel** _(56 Einträge in app/src/content/nutrition.ts; Entwurf, Quellen/Werte ungeprüft)_
 
 Mögliche Kategorien:
 
@@ -760,7 +760,7 @@ reviewedAt
 
 ## 12.3 Rezept-Pipeline
 
-- [ ] **Wöchentliche Rezepte generieren**
+- [ ] **Wöchentliche Rezepte generieren** _(umgesetzt: 13 handgeschriebene Rezepte, wöchentlich rotierende Auswahl; eine automatische Generierung neuer Rezepte, z. B. per KI-Pipeline, gibt es nicht)_
 
 Eigenschaften:
 
@@ -774,7 +774,7 @@ proteinRich
 ironRich
 ```
 
-- [ ] **Nährstoff-Synergien kennzeichnen**
+- [x] **Nährstoff-Synergien kennzeichnen** _(bei Rezepten mit Hinweistext; Entwurf, ungeprüft)_
 
   Beispiel:
 
@@ -896,7 +896,7 @@ abgeschlossene Micro-Habits
 
 ## 16.1 Diastase-/Symptom-Export
 
-- [ ] **PDF/Text-Export**
+- [x] **PDF/Text-Export** _(Textdatei + Drucken als PDF (Browser); lokal erzeugt)_
 
 Beispielsweise:
 

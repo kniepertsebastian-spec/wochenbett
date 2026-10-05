@@ -44,6 +44,7 @@ export type DiastasisLog = {
   note?: string
 }
 
+export type Appointment = { id?: number; date: string; title: string; kind: 'midwife' | 'gynecology' | 'checkup' | 'custom'; note?: string }
 export type DailyHabit = { id?: number; date: string; habitId: string }
 export type SavedItem = { id: string; savedAt: string }
 export type AppSetting = { key: string; value: unknown }
@@ -57,6 +58,7 @@ export class AppDB extends Dexie {
   symptomLogs!: EntityTable<SymptomLog, 'id'>
   diastasisLogs!: EntityTable<DiastasisLog, 'id'>
   dailyHabits!: EntityTable<DailyHabit, 'id'>
+  appointments!: EntityTable<Appointment, 'id'>
   savedRecipes!: EntityTable<SavedItem, 'id'>
   savedTips!: EntityTable<SavedItem, 'id'>
   appSettings!: EntityTable<AppSetting, 'key'>
@@ -88,6 +90,8 @@ export class AppDB extends Dexie {
             if (!w.reaction) w.reaction = 'ok'
           }),
       )
+    // v3: Termine & Erinnerungen
+    this.version(3).stores({ appointments: '++id, date' })
   }
 }
 

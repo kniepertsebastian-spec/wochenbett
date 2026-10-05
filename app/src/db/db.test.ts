@@ -31,6 +31,10 @@ describe('Datenbank-Migration', () => {
     expect(workouts[0].reaction).toBe('ok')
     expect(workouts[0].exerciseIds).toEqual(['a'])
     expect(await db.symptomLogs.count()).toBe(1)
+    // v3: neue Tabelle ist nutzbar, alte Daten bleiben
+    await db.appointments.add({ date: '2026-11-01', title: 'Nachuntersuchung', kind: 'checkup' })
+    expect(await db.appointments.count()).toBe(1)
+    expect(await db.workoutHistory.count()).toBe(1)
     db.close()
   })
 })
