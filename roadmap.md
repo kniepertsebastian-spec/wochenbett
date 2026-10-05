@@ -153,7 +153,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Für schnelles Erstellen eines mobilen UI-Systems mit Safe Areas, Dark Mode, Accessibility und konsistenten Abständen.
 
-- [ ] **UI-Grundsystem definieren**
+- [x] **UI-Grundsystem definieren** _(9 Komponenten in `app/src/components/`; Lint, Typecheck, Browser-Smoketest geprüft)_
 
   Wiederverwendbare Komponenten:
 
