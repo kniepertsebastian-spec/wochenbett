@@ -1,0 +1,20 @@
+[
+  { "id": "t1", "category": "sneaky_exercise", "minutes": 0, "text": "Beim Zähneputzen: Füße hüftbreit, Gewicht gleichmäßig verteilen und ruhig ausatmen." },
+  { "id": "t2", "category": "sneaky_exercise", "minutes": 2, "text": "Beim Wickeln: Beim Anheben des Babys ausatmen, das Baby nah am Körper führen." },
+  { "id": "t3", "category": "sneaky_exercise", "minutes": 2, "text": "Wartezeit am Wasserkocher: ein paar ruhige Atemzüge in die Flanken, Schultern locker." },
+  { "id": "t4", "category": "toddler_hack", "minutes": 5, "text": "Wenn ein älteres Kind dabei ist: Machen Sie die Atem- oder Mobilisationsübung als gemeinsames Spiel, zum Beispiel 'Luftballon-Atmung'." },
+  { "id": "t5", "category": "toddler_hack", "minutes": 2, "text": "Bequemes Hinsetzen auf dem Boden neben dem Spielzeug: Schultern kreisen und Nacken lockern, während das Kind spielt." },
+  { "id": "t6", "category": "toddler_hack", "minutes": 0, "text": "Bücken vermeiden: Spielzeug lieber in der Hocke oder im Kniestand aufheben, dabei ausatmen." },
+  { "id": "t7", "category": "nutrition_shortcut", "minutes": 0, "text": "Einen Snack-Teller für die Stillecke vorbereiten: Nüsse, Obst, Vollkornkekse. Einhändig essbar." },
+  { "id": "t8", "category": "nutrition_shortcut", "minutes": 2, "text": "Tiefgekühltes Gemüse und Hülsen aus der Dose sparen Zeit und sind eine gute Basis für warme Mahlzeiten." },
+  { "id": "t9", "category": "nutrition_shortcut", "minutes": 0, "text": "Wassergläser an den Orten verteilen, an denen Sie am häufigsten sitzen oder stillen." },
+  { "id": "t10", "category": "mindset", "minutes": 0, "text": "Heute reicht es. Eine Minute Atmen zählt genauso wie eine ganze Einheit." },
+  { "id": "t11", "category": "mindset", "minutes": 0, "text": "Pausentage gehören zur Erholung. Der Körper arbeitet auch im Ausruhen." },
+  { "id": "t12", "category": "mindset", "minutes": 0, "text": "Vergleichen Sie sich nicht mit anderen. Jede Geburt und jeder Weg zurück ist anders." },
+  { "id": "t13", "category": "recovery", "minutes": 0, "text": "Wenn Sie sich hinlegen können, legen Sie die Beine hoch und atmen ruhig in den Bauch." },
+  { "id": "t14", "category": "recovery", "minutes": 2, "text": "Zwischen zwei Stillmahlzeiten: Nacken und Schultern sanft lockern." },
+  { "id": "t15", "category": "everyday_life", "minutes": 0, "text": "Über die Seite aufstehen statt sich direkt aufzusetzen." },
+  { "id": "t16", "category": "everyday_life", "minutes": 0, "text": "Kinderwagen so einstellen, dass Sie aufrecht und mit lockeren Schultern schieben." },
+  { "id": "t17", "category": "everyday_life", "minutes": 2, "text": "Tragen Sie Einkäufe abwechselnd rechts und links und halten Sie sie nah am Körper." },
+  { "id": "t18", "category": "everyday_life", "minutes": 0, "text": "Bitten Sie um Hilfe beim Heben schwerer Dinge, zum Beispiel Wasserkästen." }
+]

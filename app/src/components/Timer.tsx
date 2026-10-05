@@ -4,6 +4,7 @@ type Props = {
   seconds: number
   running: boolean
   onDone?: () => void
+  onTick?: (left: number) => void
 }
 
 function format(total: number) {
@@ -13,11 +14,13 @@ function format(total: number) {
 }
 
 /** Countdown. Anzeige ist ein Text; die Ansage per aria-live nur alle 10 s und am Ende, um Screenreader nicht zu fluten. */
-export function Timer({ seconds, running, onDone }: Props) {
+export function Timer({ seconds, running, onDone, onTick }: Props) {
   const [left, setLeft] = useState(seconds)
   const doneRef = useRef(onDone)
+  const tickRef = useRef(onTick)
   useEffect(() => {
     doneRef.current = onDone
+    tickRef.current = onTick
   })
 
   // Bei geänderter Startzeit während des Renderns zurücksetzen (kein Effekt nötig).
@@ -30,17 +33,19 @@ export function Timer({ seconds, running, onDone }: Props) {
   useEffect(() => {
     if (!running) return
     const id = setInterval(() => {
-      setLeft((l) => {
-        if (l <= 1) {
-          clearInterval(id)
-          doneRef.current?.()
-          return 0
-        }
-        return l - 1
-      })
+      setLeft((l) => Math.max(0, l - 1))
     }, 1000)
     return () => clearInterval(id)
   }, [running])
+
+  // Seiteneffekte (Ansagen, Weiterschalten) außerhalb des State-Updaters, damit sie nur einmal laufen
+  const prev = useRef(left)
+  useEffect(() => {
+    if (prev.current === left) return
+    prev.current = left
+    tickRef.current?.(left)
+    if (left === 0) doneRef.current?.()
+  }, [left])
 
   const announce = left === 0 || left % 10 === 0 ? `${left} Sekunden verbleibend` : ''
   return (

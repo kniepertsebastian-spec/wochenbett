@@ -8,13 +8,17 @@ Jeder medizinisch relevante Inhalt (Übungen, Red Flags, Beckenboden-Infos, Ern�
 type EvidenceLevel = 'strong' | 'moderate' | 'limited' | 'practical_tip';
 
 type ContentMeta = {
-  sources: { title: string; url?: string; publisher?: string }[]; // mind. 1, außer practical_tip
   evidenceLevel: EvidenceLevel;
-  reviewedAt: string;   // ISO-Datum, z. B. "2026-10-01"
-  reviewDue: string;    // ISO-Datum, z. B. "2027-10-01"
-  reviewedBy?: string;  // Rolle, z. B. "Beckenboden-Physiotherapeutin"
+  sources: { title: string; url?: string; publisher?: string }[]; // Pflicht außer bei practical_tip
+  status: 'draft' | 'reviewed';
+  draftedAt: string;   // ISO-Datum
+  reviewDue: string;   // ISO-Datum
+  reviewedAt?: string; // Pflicht bei status 'reviewed'
+  reviewedBy?: string; // Rolle der prüfenden Person, Pflicht bei 'reviewed'
 };
 ```
+
+(Umgesetzt in `app/src/domain/types.ts`, Validierung in `app/src/content/validate.ts`.)
 
 Beispiel:
 

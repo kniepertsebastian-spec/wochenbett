@@ -1,0 +1,22 @@
+services:
+  app:
+    build: ./app
+    container_name: wochenbett-app
+    restart: unless-stopped
+    ports:
+      # Nur lokal gebunden; von außen kommt der Zugriff über den Cloudflare Tunnel.
+      - "127.0.0.1:8080:80"
+
+  # Cloudflare Tunnel: macht die App ohne Portfreigabe von außen erreichbar.
+  # Start: docker compose --profile tunnel up -d
+  # Benötigt TUNNEL_TOKEN in .env (siehe docs/deployment.md).
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: wochenbett-tunnel
+    profiles: ["tunnel"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN:-}
+    depends_on:
+      - app
