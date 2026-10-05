@@ -69,6 +69,10 @@ export function SettingsPage() {
           <input type="checkbox" className="size-5" checked={settings.screenless} onChange={(e) => set('screenless', e.target.checked)} />
           Ohne Bildschirm trainieren (Audio führt durch)
         </label>
+        <label className="flex min-h-12 items-center gap-3">
+          <input type="checkbox" className="size-5" checked={settings.autoStartNext} onChange={(e) => set('autoStartNext', e.target.checked)} />
+          Nächste Übung nach 10 Sekunden automatisch starten
+        </label>
       </Card>
 
       <Card className="space-y-1">
