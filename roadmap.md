@@ -262,7 +262,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 3.1 Übungs-Datensatz
 
-- [ ] **Bestehendes Fitness-Repo bereinigen**
+- [ ] **Bestehendes Fitness-Repo bereinigen** _(offen: das Repo liegt nicht vor, Katalog wurde stattdessen neu kuratiert; bitte Repo-Link nennen)_
 
   Zunächst ungeeignete Übungen entfernen, beispielsweise:
 
@@ -274,7 +274,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Die konkrete Freigabe einzelner Übungen sollte fachlich geprüft werden.
 
-- [ ] **20–25 Basisübungen kuratieren**
+- [x] **20–25 Basisübungen kuratieren** _(22 Übungen in app/src/content/exercises.ts; Entwurf, fachlich ungeprüft)_
 
   Beispielsweise:
 
@@ -319,7 +319,7 @@ audioCues
 
 ## 3.3 Übungs-Progressionen
 
-- [ ] **Regression → Basis → Progression modellieren**
+- [x] **Regression → Basis → Progression modellieren** _(regressions/progressions + Validierung der Referenzen, getestet)_
 
   Beispiel:
 
@@ -331,7 +331,7 @@ audioCues
   Marching Bridge
   ```
 
-- [ ] **Automatische Regression ermöglichen**
+- [x] **Automatische Regression ermöglichen** _(engine/progression.ts, getestet)_
 
   **Erklärung:** Wenn die Nutzerin bei einer Übung Probleme meldet, kann automatisch eine leichtere Variante angeboten werden.
 
@@ -378,11 +378,11 @@ audioCues
 
 ## 5.1 IndexedDB
 
-- [ ] **Dexie.js integrieren**
+- [x] **Dexie.js integrieren** _(app/src/db/db.ts)_
 
   **Erklärung:** IndexedDB dient als lokale Datenbank. Dexie vereinfacht die Arbeit mit IndexedDB.
 
-- [ ] **Datenmodell definieren**
+- [x] **Datenmodell definieren** _(alle 11 Tabellen)_
 
   ```text
   userProfile
@@ -428,7 +428,7 @@ audioCues
 
 ## 5.3 Datenbank-Versionierung
 
-- [ ] **Schema-Versionen definieren**
+- [x] **Schema-Versionen definieren** _(v1 → v2 inkl. Upgrade, per Test mit fake-indexeddb geprüft)_
 
   **Erklärung:** Bei Änderungen am Datenmodell werden bestehende Daten migriert, anstatt verloren zu gehen.
 
