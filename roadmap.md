@@ -881,14 +881,14 @@ abgeschlossene Micro-Habits
 
 # Phase 15 – Accessibility
 
-- [ ] **VoiceOver-Unterstützung**
-- [ ] **TalkBack-Unterstützung**
-- [ ] **Reduced Motion**
-- [ ] **Kontrast prüfen**
-- [ ] **Nicht ausschließlich Farbe verwenden**
-- [ ] **Große Touchflächen**
-- [ ] **Screenreader-kompatible Timer**
-- [ ] **Audio vollständig optional**
+- [ ] **VoiceOver-Unterstützung** _(axe-Prüfung bestanden, mit echtem VoiceOver nicht getestet)_
+- [ ] **TalkBack-Unterstützung** _(axe-Prüfung bestanden, mit echtem TalkBack nicht getestet)_
+- [x] **Reduced Motion** _(CSS prefers-reduced-motion, per Playwright geprüft)_
+- [x] **Kontrast prüfen** _(axe-core WCAG 2 AA, hell und dunkel, alle Seiten)_
+- [x] **Nicht ausschließlich Farbe verwenden** _(Ampel/Banner mit Text + Symbol, Navigation mit Unterstreichung)_
+- [x] **Große Touchflächen** _(alle Bedienelemente >= 44 px, per Playwright geprüft)_
+- [ ] **Screenreader-kompatible Timer** _(Timer mit role=timer und gedrosselter Ansage umgesetzt, nicht mit echtem Screenreader getestet)_
+- [x] **Audio vollständig optional** _(alle Funktionen ohne Audio nutzbar, Audio in Einstellungen abschaltbar)_
 
 ---
 
@@ -1025,14 +1025,14 @@ Zusätzlich:
 
 # Phase 18 – Performance & PWA Audit
 
-- [ ] **Lighthouse Audit**
-- [ ] **Bundle Size analysieren**
-- [ ] **Lazy Loading**
-- [ ] **Bilder optimieren**
-- [ ] **Audio-Dateien optimieren**
-- [ ] **Service-Worker-Cache überprüfen**
-- [ ] **First Load optimieren**
-- [ ] **Offline-Start testen**
+- [x] **Lighthouse Audit** _(mobil/simuliert: Performance 99, Barrierefreiheit 100, Best Practices 100, SEO 91 (robots.txt bewusst auf Disallow/noindex))_
+- [x] **Bundle Size analysieren** _(Haupt-Bundle 417 kB (132 kB gzip), 11 Lazy-Chunks, Precache 525 kB)_
+- [x] **Lazy Loading** _(Routen außerhalb des Kernablaufs per React.lazy)_
+- [ ] **Bilder optimieren** _(keine Bilder im Einsatz außer PWA-Icons (je unter 18 KB))_
+- [ ] **Audio-Dateien optimieren** _(keine Audiodateien, Ansagen über Geräte-Sprachausgabe)_
+- [x] **Service-Worker-Cache überprüfen** _(29 Precache-Einträge, Offline-Tests bestanden)_
+- [x] **First Load optimieren** _(LCP 1,9 s, TBT 0 ms (Lighthouse mobil simuliert))_
+- [x] **Offline-Start testen** _(e2e/offline.mjs)_
 
 ---
 
@@ -1062,7 +1062,7 @@ PWA
 - [ ] SSL-Zertifikat
 - [ ] Reverse Proxy
 - [ ] HTTP → HTTPS Redirect
-- [ ] Security Header
+- [x] Security Header _(nginx: CSP, X-Frame-Options, nosniff, Referrer-/Permissions-Policy per curl geprüft)_
 
 ---
 

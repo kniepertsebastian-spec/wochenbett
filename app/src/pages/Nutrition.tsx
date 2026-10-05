@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Card, WarningBanner } from '../components'
+import { Card, WarningBanner, BackLink } from '../components'
 import { foods, nutrients, synergyNote, type Nutrient } from '../content/nutrition'
 
 export function NutritionPage() {
@@ -9,7 +8,7 @@ export function NutritionPage() {
   const list = foods.filter((f) => (!n || f.nutrient === n) && f.food.toLowerCase().includes(q.toLowerCase()))
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline">← Mehr</Link>
+      <BackLink to="/more">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold">Ernährung</h1>
       <WarningBanner level="yellow">Entwurf: nicht fachlich geprüft. Das Lexikon zeigt typische Quellen und ersetzt keine Ernährungsberatung. Bei Verdacht auf Mangel bitte ärztlich abklären lassen.</WarningBanner>
       <p className="text-sm text-stone-600 dark:text-stone-400">{synergyNote}</p>

@@ -1,6 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Link } from 'react-router-dom'
-import { Card, WarningBanner } from '../components'
+import { Card, WarningBanner, BackLink } from '../components'
 import { db } from '../db/db'
 import { longTerm, timeline } from '../content/timeline'
 import { useUserState } from '../hooks/useUserState'
@@ -14,7 +13,7 @@ export function TimelinePage() {
   const inWeeks = (from: number, to: number) => counts.filter((d) => { const w = Math.floor((new Date(d).getTime() - birth.getTime()) / (7 * 86_400_000)) + 1; return w >= from && w <= to }).length
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline">← Mehr</Link>
+      <BackLink to="/more">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold">Wochen-Orientierung</h1>
       <WarningBanner level="yellow">Nur zur Orientierung, keine Freigabe. Was für dich passt, hängt von deinem Befinden und deiner Fachperson ab.</WarningBanner>
       <ol className="space-y-3">

@@ -1,7 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Card } from '../components'
+import { Button, Card, BackLink } from '../components'
 import { db } from '../db/db'
 import { tips, type TipCategory } from '../engine/tips'
 
@@ -13,7 +12,7 @@ export function TipsPage() {
   const list = tips.filter((t) => !cat || t.category === cat)
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline">← Mehr</Link>
+      <BackLink to="/more">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold">Tipps</h1>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Kategorie">
         <Button variant={cat === null ? 'primary' : 'secondary'} onClick={() => setCat(null)}>alle</Button>

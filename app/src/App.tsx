@@ -1,31 +1,35 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './app/Layout'
 import { SessionProvider } from './app/session'
 import { UpdateBanner } from './app/UpdateBanner'
 import { useProfile } from './hooks/useUserState'
 import { CheckInPage } from './pages/CheckIn'
-import { DiastasisPage } from './pages/Diastasis'
 import { ExerciseDetailPage, LibraryPage } from './pages/Library'
-import { AppointmentsPage } from './pages/Appointments'
-import { ExportPage } from './pages/Export'
 import { MorePage } from './pages/More'
-import { NutritionPage } from './pages/Nutrition'
-import { RecipeDetailPage, RecipesPage } from './pages/Recipes'
-import { TimelinePage } from './pages/Timeline'
-import { TipsPage } from './pages/Tips'
 import { Onboarding } from './pages/Onboarding'
-import { PelvicFloorPage } from './pages/PelvicFloor'
 import { PlanPage } from './pages/Plan'
-import { ProgressPage } from './pages/Progress'
-import { SettingsPage } from './pages/Settings'
 import { TodayPage } from './pages/Today'
 import { WorkoutPage } from './pages/Workout'
+
+const DiastasisPage = lazy(() => import('./pages/Diastasis').then((m) => ({ default: m.DiastasisPage })))
+const AppointmentsPage = lazy(() => import('./pages/Appointments').then((m) => ({ default: m.AppointmentsPage })))
+const ExportPage = lazy(() => import('./pages/Export').then((m) => ({ default: m.ExportPage })))
+const NutritionPage = lazy(() => import('./pages/Nutrition').then((m) => ({ default: m.NutritionPage })))
+const RecipeDetailPage = lazy(() => import('./pages/Recipes').then((m) => ({ default: m.RecipeDetailPage })))
+const RecipesPage = lazy(() => import('./pages/Recipes').then((m) => ({ default: m.RecipesPage })))
+const TimelinePage = lazy(() => import('./pages/Timeline').then((m) => ({ default: m.TimelinePage })))
+const TipsPage = lazy(() => import('./pages/Tips').then((m) => ({ default: m.TipsPage })))
+const SettingsPage = lazy(() => import('./pages/Settings').then((m) => ({ default: m.SettingsPage })))
+const ProgressPage = lazy(() => import('./pages/Progress').then((m) => ({ default: m.ProgressPage })))
+const PelvicFloorPage = lazy(() => import('./pages/PelvicFloor').then((m) => ({ default: m.PelvicFloorPage })))
 
 function Gate() {
   const profile = useProfile()
   if (profile === undefined) return null
   if (profile === null) return <Onboarding />
   return (
+    <Suspense fallback={<p className="p-4" role="status">Lädt …</p>}>
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<TodayPage />} />
@@ -49,6 +53,7 @@ function Gate() {
         <Route path="*" element={<TodayPage />} />
       </Route>
     </Routes>
+    </Suspense>
   )
 }
 

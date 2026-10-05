@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Card, WarningBanner } from '../components'
+import { Button, Card, WarningBanner, BackLink } from '../components'
 import { recipes, weeklyRecipes, type RecipeTag } from '../content/recipes'
 import { synergyNote } from '../content/nutrition'
 import { db } from '../db/db'
@@ -24,7 +24,7 @@ export function RecipesPage() {
   )
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline">← Mehr</Link>
+      <BackLink to="/more">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold">Rezepte</h1>
       <WarningBanner level="yellow">Entwurf: Rezepte und Nährstoffangaben sind noch nicht fachlich geprüft. Keine Therapieempfehlung.</WarningBanner>
       <h2 className="text-xl font-semibold">Diese Woche</h2>
@@ -45,11 +45,11 @@ export function RecipeDetailPage() {
   const { id } = useParams()
   const r = recipes.find((x) => x.id === id)
   const saved = useLiveQuery(() => (id ? db.savedRecipes.get(id) : undefined), [id])
-  if (!r) return <main className="pt-safe p-4"><Link to="/more/recipes" className="underline">Rezept nicht gefunden</Link></main>
+  if (!r) return <main className="pt-safe p-4"><BackLink to="/more/recipes">← Rezept nicht gefunden</BackLink></main>
   const toggle = () => (saved ? db.savedRecipes.delete(r.id) : db.savedRecipes.put({ id: r.id, savedAt: new Date().toISOString() }))
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more/recipes" className="underline">← Rezepte</Link>
+      <BackLink to="/more/recipes">← Rezepte</BackLink>
       <h1 className="text-2xl font-semibold">{r.title}</h1>
       <p className="text-stone-600 dark:text-stone-400">{r.minutes} Min · {r.tags.map((t) => tagLabels[t]).join(', ')}</p>
       <Card><h2 className="mb-1 font-semibold">Zutaten</h2><ul className="list-disc pl-5">{r.ingredients.map((i) => <li key={i}>{i}</li>)}</ul></Card>

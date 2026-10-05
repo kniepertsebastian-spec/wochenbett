@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button, Card, ExerciseCard, WarningBanner } from '../components'
+import { Button, Card, ExerciseCard, WarningBanner, BackLink } from '../components'
 import { useSession } from '../app/session'
 import { exerciseById, exercises } from '../content/exercises'
 import type { Readiness } from '../domain/types'
@@ -65,13 +65,13 @@ export function ExerciseDetailPage() {
     return (
       <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
         <p>Diese Übung ist für dich aktuell nicht verfügbar.</p>
-        <Link to="/library" className="underline">Zurück</Link>
+        <BackLink to="/library">← Zurück</BackLink>
       </main>
     )
   }
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/library" className="underline">← Übungen</Link>
+      <BackLink to="/library">← Übungen</BackLink>
       <h1 className="text-2xl font-semibold">{e.name}</h1>
       <p>{e.description}</p>
       <ol className="list-decimal space-y-1 pl-5">

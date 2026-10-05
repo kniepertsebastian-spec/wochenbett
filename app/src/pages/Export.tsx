@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Card, WarningBanner } from '../components'
+import { Button, Card, WarningBanner, BackLink } from '../components'
 import { db } from '../db/db'
 import { buildReport, type ReportSections } from '../engine/report'
 
@@ -27,7 +26,7 @@ export function ExportPage() {
 
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline print:hidden">← Mehr</Link>
+      <BackLink to="/more" className="print:hidden">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold print:hidden">Verlauf teilen</h1>
       {!report ? (
         <>

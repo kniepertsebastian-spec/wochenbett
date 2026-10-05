@@ -1,7 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Card } from '../components'
+import { Button, Card, BackLink } from '../components'
 import { db, type Appointment } from '../db/db'
 
 const kinds: Record<Appointment['kind'], string> = { midwife: 'Hebamme', gynecology: 'Gynäkologie', checkup: 'Nachuntersuchung', custom: 'Eigene Erinnerung' }
@@ -27,7 +26,7 @@ export function AppointmentsPage() {
   )
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/more" className="underline">← Mehr</Link>
+      <BackLink to="/more">← Mehr</BackLink>
       <h1 className="text-2xl font-semibold">Termine</h1>
       <p className="text-stone-600 dark:text-stone-400">Die App sendet keine Benachrichtigungen. Termine bleiben auf deinem Gerät und sind eine Gedächtnisstütze.</p>
       <Card className="space-y-3">

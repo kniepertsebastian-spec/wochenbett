@@ -1,7 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Card, CheckIn, WarningBanner } from '../components'
+import { Button, Card, CheckIn, WarningBanner, BackLink } from '../components'
 import { db, type DiastasisLog } from '../db/db'
 
 const widths = [0, 1, 2, 3, 4, 5].map((v) => ({ value: v, label: v === 5 ? '5+' : String(v) }))
@@ -42,7 +41,7 @@ export function DiastasisPage() {
 
   return (
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4">
-      <Link to="/pelvic-floor" className="underline">← Beckenboden</Link>
+      <BackLink to="/pelvic-floor">← Beckenboden</BackLink>
       <h1 className="text-2xl font-semibold">Bauchmitte beobachten</h1>
       <WarningBanner level="yellow">
         Das ist eine Selbstbeobachtung und keine Diagnose. Die App kann nicht beurteilen, ob bei dir eine Rektusdiastase vorliegt. Lass Auffälligkeiten von deiner Hebamme oder Physiotherapeutin untersuchen. (Entwurf, noch nicht fachlich geprüft.)
