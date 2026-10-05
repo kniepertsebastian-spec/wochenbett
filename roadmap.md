@@ -149,7 +149,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Vite übernimmt Development und Build-Prozess. React bildet die UI-Komponenten. TypeScript sorgt für typisierte Datenmodelle.
 
-- [ ] **Tailwind CSS integrieren**
+- [x] **Tailwind CSS integrieren** _(Tailwind v4 via Vite-Plugin; Safe-Area-Utilities, Dark Mode, Reduced Motion; Build + Lint geprüft)_
 
   **Erklärung:** Für schnelles Erstellen eines mobilen UI-Systems mit Safe Areas, Dark Mode, Accessibility und konsistenten Abständen.
 
