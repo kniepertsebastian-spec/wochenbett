@@ -35,6 +35,10 @@ UI (src/pages, src/components)
 
 Die UI entscheidet nie selbst, ob eine Übung erlaubt ist; das macht `recommend()` zentral und fail-closed.
 
+## Sync (optional)
+
+Verschlüsselte Synchronisation für den Gerätewechsel: [`docs/sync.md`](docs/sync.md). Server in `server/` (Tests: `cd server && npm test`).
+
 ## Betrieb
 
 Docker + Nginx + optional Cloudflare Tunnel: siehe [`docs/deployment.md`](docs/deployment.md).
@@ -51,4 +55,4 @@ docker compose --profile tunnel up -d --build  # zusätzlich Cloudflare Tunnel (
 
 ## Datenschutz
 
-Alle Gesundheitsdaten bleiben lokal im Browser (IndexedDB). Keine Registrierung, keine Analytics, keine Daten in URLs. Export/Import/Löschen unter *Mehr → Einstellungen*. Die Seite ist per `robots.txt`/`noindex` von Suchmaschinen ausgeschlossen.
+Alle Gesundheitsdaten bleiben lokal im Browser (IndexedDB). Optional können sie Ende-zu-Ende-verschlüsselt synchronisiert werden; der Server sieht nie Klartext. Keine Registrierung, keine Analytics, keine Daten in URLs. Export/Import/Löschen unter *Mehr → Einstellungen*. Die Seite ist per `robots.txt`/`noindex` von Suchmaschinen ausgeschlossen.

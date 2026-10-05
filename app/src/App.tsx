@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './app/Layout'
 import { SessionProvider } from './app/session'
 import { UpdateBanner } from './app/UpdateBanner'
+import { SyncProvider } from './sync/SyncProvider'
 import { useProfile } from './hooks/useUserState'
 import { CheckInPage } from './pages/CheckIn'
 import { ExerciseDetailPage, LibraryPage } from './pages/Library'
@@ -20,6 +21,7 @@ const RecipeDetailPage = lazy(() => import('./pages/Recipes').then((m) => ({ def
 const RecipesPage = lazy(() => import('./pages/Recipes').then((m) => ({ default: m.RecipesPage })))
 const TimelinePage = lazy(() => import('./pages/Timeline').then((m) => ({ default: m.TimelinePage })))
 const TipsPage = lazy(() => import('./pages/Tips').then((m) => ({ default: m.TipsPage })))
+const SyncPage = lazy(() => import('./pages/Sync').then((m) => ({ default: m.SyncPage })))
 const SettingsPage = lazy(() => import('./pages/Settings').then((m) => ({ default: m.SettingsPage })))
 const ProgressPage = lazy(() => import('./pages/Progress').then((m) => ({ default: m.ProgressPage })))
 const PelvicFloorPage = lazy(() => import('./pages/PelvicFloor').then((m) => ({ default: m.PelvicFloorPage })))
@@ -42,6 +44,7 @@ function Gate() {
         <Route path="diastasis" element={<DiastasisPage />} />
         <Route path="progress" element={<ProgressPage />} />
         <Route path="more" element={<MorePage />} />
+        <Route path="more/sync" element={<SyncPage />} />
         <Route path="more/settings" element={<SettingsPage />} />
         <Route path="more/recipes" element={<RecipesPage />} />
         <Route path="more/recipes/:id" element={<RecipeDetailPage />} />
@@ -60,10 +63,12 @@ function Gate() {
 export default function App() {
   return (
     <BrowserRouter>
-      <SessionProvider>
-        <UpdateBanner />
-        <Gate />
-      </SessionProvider>
+      <SyncProvider>
+        <SessionProvider>
+          <UpdateBanner />
+          <Gate />
+        </SessionProvider>
+      </SyncProvider>
     </BrowserRouter>
   )
 }

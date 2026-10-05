@@ -35,7 +35,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   const [list, setList] = useState(initial)
   const [idx, setIdx] = useState(0)
   // Jede Übung beginnt im Bereit-Modus: erst lesen und in Position gehen, dann selbst starten.
-  // Ab der zweiten Übung startet sie nach 10 Sekunden von selbst (Start überspringt das Warten).
+  // Nur wenn "Nächste Übung automatisch starten" eingeschaltet ist, startet sie ab der zweiten Übung nach 10 Sekunden von selbst.
   const [prep, setPrep] = useState(true)
   const [running, setRunning] = useState(false)
   const [outcomes, setOutcomes] = useState<Record<string, Outcome>>({})
@@ -213,7 +213,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
         <p aria-live="polite">{current.name}. {prep ? 'Bereit, tippe auf Start' : running ? 'Läuft' : 'Pausiert'}</p>
         <div className="hidden">
           {prep ? (
-            idx > 0 && <Timer key={`prep-${idx}`} seconds={PREP_SECONDS} running onDone={startExercise} />
+            idx > 0 && settings.autoStartNext && <Timer key={`prep-${idx}`} seconds={PREP_SECONDS} running onDone={startExercise} />
           ) : (
             <Timer key={`${idx}-${current.id}`} seconds={current.duration} running={running} onTick={onTick} onDone={() => { mark(current.id, 'done'); setTimeout(next, 1200) }} />
           )}
@@ -235,7 +235,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
       {prep ? (
         <div className="space-y-2 rounded-2xl border border-stone-300 p-4 dark:border-stone-700">
           <p className="font-medium">Mach dich bereit: lies die Anleitung und geh in Position.</p>
-          {idx > 0 ? (
+          {idx > 0 && settings.autoStartNext ? (
             <p>
               Die Übung startet automatisch in <Timer key={`prep-${idx}`} seconds={PREP_SECONDS} running={!menu && !warn} onDone={startExercise} inline /> Sekunden. Mit Start geht es sofort los.
             </p>

@@ -8,6 +8,17 @@ services:
       # dieser Port wird dafür nicht gebraucht). Bei Konflikt APP_PORT in .env ändern oder die Zeile entfernen.
       - "127.0.0.1:${APP_PORT:-18080}:80"
 
+  # Sync-Server: speichert nur verschlüsselte Daten. Nginx der App leitet /api hierher.
+  # Ohne INVITE_CODE in .env sind neue Konten gesperrt.
+  api:
+    build: ./server
+    container_name: wochenbett-api
+    restart: unless-stopped
+    environment:
+      - INVITE_CODE=${INVITE_CODE:-}
+    volumes:
+      - wochenbett-data:/data
+
   # Cloudflare Tunnel: macht die App ohne Portfreigabe von außen erreichbar.
   # Start: docker compose --profile tunnel up -d
   # Benötigt TUNNEL_TOKEN in .env (siehe docs/deployment.md).
@@ -21,3 +32,6 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN:-}
     depends_on:
       - app
+
+volumes:
+  wochenbett-data:

@@ -16,6 +16,10 @@ Der Container ist ein Multi-Stage-Build (Node baut, Nginx Alpine liefert statisc
 
 Der lokale Port ist `18080` und über `APP_PORT` in `.env` änderbar (siehe `.env.example`). Ist er belegt, meldet Docker „port is already allocated“: dann `APP_PORT` anders setzen. Für den Betrieb nur über den Cloudflare Tunnel wird der Host-Port nicht benötigt, der Tunnel erreicht die App direkt über `app:80`; die `ports:`-Zeile kann dann entfallen.
 
+## Sync-Dienst
+
+Der Compose-Stack enthält zusätzlich `api` (Sync-Server, siehe `docs/sync.md`). In `.env` einen `INVITE_CODE` setzen, sonst sind neue Konten gesperrt. Die App funktioniert auch ohne den Dienst.
+
 ## Von außen erreichbar: Cloudflare Tunnel
 
 Der Tunnel baut eine ausgehende Verbindung zu Cloudflare auf. Es sind **keine Portfreigaben am Router** nötig, und HTTPS (auch das für PWA/Service Worker erforderliche) terminiert Cloudflare.

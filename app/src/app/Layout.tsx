@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { BottomNavigation, type NavItem } from '../components'
+import { SyncBanner } from './SyncBanner'
 
 const items: (NavItem & { path: string })[] = [
   { id: 'today', label: 'Heute', icon: '🏠', path: '/' },
@@ -17,6 +18,7 @@ export function Layout() {
   return (
     <>
       <div className={hideNav ? '' : 'pb-16'}>
+        <SyncBanner />
         <Outlet />
       </div>
       {!hideNav && <BottomNavigation items={items} activeId={active} onSelect={(id) => nav(items.find((i) => i.id === id)!.path)} />}

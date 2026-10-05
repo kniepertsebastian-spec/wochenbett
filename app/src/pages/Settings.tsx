@@ -8,9 +8,11 @@ import { DEFAULT_EQUIPMENT, EQUIPMENT } from '../domain/equipment'
 import type { EquipmentId } from '../domain/types'
 import { useProfile } from '../hooks/useUserState'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useSync } from '../sync/SyncProvider'
 
 export function SettingsPage() {
   const profile = useProfile()
+  const { client: syncClient, username: syncUser } = useSync()
   const [settings, set] = useSettings()
   const [confirm, setConfirm] = useState(false)
   const [msg, setMsg] = useState('')
@@ -40,6 +42,8 @@ export function SettingsPage() {
     }
   }
   async function wipe() {
+    // Erst abmelden: sonst könnte der leere Stand später den Server-Stand überschreiben
+    await syncClient.logout()
     await deleteAllData(db)
     setConfirm(false)
   }
@@ -64,6 +68,10 @@ export function SettingsPage() {
         <label className="flex min-h-12 items-center gap-3">
           <input type="checkbox" className="size-5" checked={settings.screenless} onChange={(e) => set('screenless', e.target.checked)} />
           Ohne Bildschirm trainieren (Audio führt durch)
+        </label>
+        <label className="flex min-h-12 items-center gap-3">
+          <input type="checkbox" className="size-5" checked={settings.autoStartNext} onChange={(e) => set('autoStartNext', e.target.checked)} />
+          Nächste Übung nach 10 Sekunden automatisch starten
         </label>
       </Card>
 
@@ -113,7 +121,7 @@ export function SettingsPage() {
       <WarningBanner level="yellow">Keine Diagnostik, keine Therapie. Die App ersetzt keine Hebamme, Physiotherapeutin oder Ärztin.</WarningBanner>
 
       <Modal open={confirm} title="Alle Daten löschen?" onClose={() => setConfirm(false)}>
-        <p className="mb-4">Dies löscht dein Profil, alle Einträge und Einstellungen auf diesem Gerät. Das kann nicht rückgängig gemacht werden.</p>
+        <p className="mb-4">Dies löscht dein Profil, alle Einträge und Einstellungen auf diesem Gerät. Das kann nicht rückgängig gemacht werden.{syncUser ? ' Du wirst auch vom Sync abgemeldet. Deine gesicherten Daten auf dem Server bleiben erhalten und kommen nach erneutem Anmelden zurück.' : ''}</p>
         <div className="grid gap-2">
           <Button onClick={wipe}>Endgültig löschen</Button>
           <Button variant="ghost" onClick={() => setConfirm(false)}>Abbrechen</Button>

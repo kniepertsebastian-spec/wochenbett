@@ -1232,7 +1232,7 @@ Der wichtigste Fortschritt ist nicht die Anzahl der absolvierten Workouts, sonde
 # Offene Ideen aus dem ersten Praxistest
 
 - [ ] **Bilder oder Videos zu den Übungen** _(Datenmodell `media` und Anzeige sind vorbereitet, Cache-Regel `/media/` ebenfalls; es fehlen lizenzierte Aufnahmen oder Illustrationen, am besten von der Physiotherapeutin)_
-- [ ] **Entscheidung: Konten und Synchronisation** _(aktuell lokal pro Browser; Optionen siehe Chat/README, Entscheidung offen)_
+- [x] **Konten und Synchronisation** _(Ende-zu-Ende-verschlüsselter Sync, Konzept und Betrieb: docs/sync.md; Server- und Browser-Tests bestanden, im Produktivbetrieb noch nicht ausgeführt)_
 - [ ] **Ernährungshinweise abhängig von Woche, Stillen oder Blutverlust** _(erst nach fachlicher Prüfung, siehe docs/content-governance.md)_
 - [ ] **Quellen für die Übungen ergänzen** _(Übungen wurden aus allgemeinem Rückbildungs-Wissen zusammengestellt, ohne Einzelquellen)_
 

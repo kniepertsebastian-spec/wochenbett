@@ -7,6 +7,7 @@ const items = [
   { to: '/more/timeline', icon: '🗓', title: 'Wochen-Orientierung', text: 'Wo du gerade stehst' },
   { to: '/more/appointments', icon: '📅', title: 'Termine', text: 'Hebamme, Nachuntersuchung, Erinnerungen' },
   { to: '/more/export', icon: '📄', title: 'Verlauf teilen', text: 'Bericht für Hebamme oder Ärztin' },
+  { to: '/more/sync', icon: '☁️', title: 'Sync & Sicherung', text: 'Daten sichern und aufs neue Handy mitnehmen' },
   { to: '/more/settings', icon: '⚙️', title: 'Einstellungen & Daten', text: 'Audio, Profil, Export, Löschen' },
 ]
 
