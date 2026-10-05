@@ -40,7 +40,7 @@ Die UI entscheidet nie selbst, ob eine Übung erlaubt ist; das macht `recommend(
 Docker + Nginx + optional Cloudflare Tunnel: siehe [`docs/deployment.md`](docs/deployment.md).
 
 ```bash
-docker compose up -d --build                 # http://127.0.0.1:8080
+docker compose up -d --build                 # http://127.0.0.1:18080
 docker compose --profile tunnel up -d --build  # zusätzlich Cloudflare Tunnel (TUNNEL_TOKEN in .env)
 ```
 
