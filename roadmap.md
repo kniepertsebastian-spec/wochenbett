@@ -175,11 +175,11 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 2.1 PWA einrichten
 
-- [ ] **vite-plugin-pwa integrieren**
+- [x] **vite-plugin-pwa integrieren** _(Service Worker per generateSW, Offline-Reload getestet)_
 
   **Erklärung:** Damit wird die Webanwendung installierbar und kann Offline-Funktionen nutzen.
 
-- [ ] **Web App Manifest konfigurieren**
+- [x] **Web App Manifest konfigurieren** _(vite.config.ts)_
 
   ```text
   name
@@ -191,11 +191,11 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
   display: standalone
   ```
 
-- [ ] **Maskable Icons erstellen**
+- [x] **Maskable Icons erstellen** _(app/public/icons, aus SVG-Platzhalter generiert; Design ggf. ersetzen)_
 
   **Erklärung:** Sorgt für korrekte App-Icons auf unterschiedlichen Plattformen.
 
-- [ ] **iOS-spezifische PWA-Anpassungen**
+- [x] **iOS-spezifische PWA-Anpassungen** _(Meta-Tags, apple-touch-icon, viewport-fit, Safe Areas; keine eigenen Startbilder; auf echtem iPhone noch ungetestet)_
 
   - `viewport-fit=cover`
   - Safe Areas
@@ -207,7 +207,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 2.2 Docker-Containerisierung
 
-- [ ] **Multi-Stage-Dockerfile**
+- [x] **Multi-Stage-Dockerfile** _(app/Dockerfile; Docker-Build in dieser Umgebung nicht ausführbar, nicht gebaut)_
 
   ```text
   Node
@@ -223,7 +223,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Der Produktionscontainer bleibt dadurch klein und enthält nur die für den Betrieb benötigten Dateien.
 
-- [ ] **Nginx konfigurieren**
+- [x] **Nginx konfigurieren** _(mit nginx -t und curl getestet)_
 
   ```nginx
   try_files $uri $uri/ /index.html;
@@ -231,11 +231,11 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Dadurch funktionieren SPA-Routen auch beim direkten Aufruf.
 
-- [ ] **Caching-Regeln definieren**
+- [x] **Caching-Regeln definieren** _(getestet, siehe docs/deployment.md)_
 
   **Erklärung:** Statische Assets können lange gecacht werden. Service Worker und Manifest müssen dagegen kontrolliert aktualisiert werden.
 
-- [ ] **docker-compose.yml**
+- [x] **docker-compose.yml** _(Konfig validiert, nicht gestartet)_
 
   **Erklärung:** Ermöglicht einfachen lokalen Betrieb und späteres Deployment auf NAS oder Server.
 
@@ -243,7 +243,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 2.3 HTTPS-Infrastruktur
 
-- [ ] **HTTPS bereitstellen**
+- [ ] **HTTPS bereitstellen** _(Cloudflare-Tunnel-Setup vorbereitet: docs/deployment.md; offen bis du ihn mit deiner Domain/Token einrichtest)_
 
   Mögliche Lösungen:
 
