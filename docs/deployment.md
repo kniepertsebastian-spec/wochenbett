@@ -3,7 +3,7 @@
 ## Lokal / Mini-PC
 
 ```bash
-docker compose up -d --build        # App auf http://127.0.0.1:8080
+docker compose up -d --build        # App auf http://127.0.0.1:18080
 ```
 
 Der Container ist ein Multi-Stage-Build (Node baut, Nginx Alpine liefert statisch aus). Nginx setzt SPA-Fallback, Caching-Regeln und Security-Header (`app/nginx.conf`, `app/security-headers.conf`).
@@ -14,6 +14,8 @@ Der Container ist ein Multi-Stage-Build (Node baut, Nginx Alpine liefert statisc
 | `/sw.js`, `/manifest.webmanifest`, HTML | `no-cache` (immer revalidieren, damit Updates ankommen) |
 | `/icons/*` | 1 Woche |
 
+Der lokale Port ist `18080` und über `APP_PORT` in `.env` änderbar (siehe `.env.example`). Ist er belegt, meldet Docker „port is already allocated“: dann `APP_PORT` anders setzen. Für den Betrieb nur über den Cloudflare Tunnel wird der Host-Port nicht benötigt, der Tunnel erreicht die App direkt über `app:80`; die `ports:`-Zeile kann dann entfallen.
+
 ## Von außen erreichbar: Cloudflare Tunnel
 
 Der Tunnel baut eine ausgehende Verbindung zu Cloudflare auf. Es sind **keine Portfreigaben am Router** nötig, und HTTPS (auch das für PWA/Service Worker erforderliche) terminiert Cloudflare.
@@ -23,7 +25,7 @@ Der Tunnel baut eine ausgehende Verbindung zu Cloudflare auf. Es sind **keine Po
 3. `.env.example` nach `.env` kopieren und `TUNNEL_TOKEN` eintragen (`.env` ist per `.gitignore` ausgeschlossen).
 4. `docker compose --profile tunnel up -d --build`
 
-Voraussetzung: eine Domain, die bei Cloudflare verwaltet wird. Ohne eigene Domain ist nur ein temporärer Quick Tunnel (`cloudflared tunnel --url http://localhost:8080`, wechselnde `trycloudflare.com`-URL) möglich, der sich für eine dauerhaft installierte PWA nicht eignet.
+Voraussetzung: eine Domain, die bei Cloudflare verwaltet wird. Ohne eigene Domain ist nur ein temporärer Quick Tunnel (`cloudflared tunnel --url http://localhost:18080`, wechselnde `trycloudflare.com`-URL) möglich, der sich für eine dauerhaft installierte PWA nicht eignet.
 
 ## Hinweise
 

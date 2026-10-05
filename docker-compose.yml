@@ -4,8 +4,9 @@ services:
     container_name: wochenbett-app
     restart: unless-stopped
     ports:
-      # Nur lokal gebunden; von außen kommt der Zugriff über den Cloudflare Tunnel.
-      - "127.0.0.1:8080:80"
+      # Nur lokal gebunden; von außen kommt der Zugriff über den Cloudflare Tunnel (der erreicht die App direkt über app:80,
+      # dieser Port wird dafür nicht gebraucht). Bei Konflikt APP_PORT in .env ändern oder die Zeile entfernen.
+      - "127.0.0.1:${APP_PORT:-18080}:80"
 
   # Cloudflare Tunnel: macht die App ohne Portfreigabe von außen erreichbar.
   # Start: docker compose --profile tunnel up -d
