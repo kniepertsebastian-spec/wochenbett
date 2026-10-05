@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './app/Layout'
 import { SessionProvider } from './app/session'
+import { UpdateBanner } from './app/UpdateBanner'
 import { useProfile } from './hooks/useUserState'
 import { CheckInPage } from './pages/CheckIn'
 import { ExerciseDetailPage, LibraryPage } from './pages/Library'
@@ -38,6 +39,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <SessionProvider>
+        <UpdateBanner />
         <Gate />
       </SessionProvider>
     </BrowserRouter>

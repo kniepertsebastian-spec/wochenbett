@@ -33,6 +33,20 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
+        // App Shell + gebündelter Inhalt (Übungen, Texte) sind vorab gecacht (Precache, Stale-While-Revalidate via Revisionen).
+        // Für später ausgelagerte Medien/Inhalte:
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/media/'), // Übungsbilder/GIFs/SVGs, Audio
+            handler: 'CacheFirst',
+            options: { cacheName: 'media', expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 365 }, cacheableResponse: { statuses: [0, 200] }, rangeRequests: true },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/content/'), // JSON-Inhalte (Rezepte, ProTips)
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'content' },
+          },
+        ],
       },
     }),
   ],

@@ -438,15 +438,15 @@ audioCues
 
 ## 6.1 Service Worker
 
-- [ ] **App Shell cachen**
+- [x] **App Shell cachen** _(Precache, im Flugmodus getestet)_
 
-- [ ] **Workout-Inhalte offline verfügbar**
+- [x] **Workout-Inhalte offline verfügbar** _(Übungen sind gebündelt; Workout im Flugmodus getestet)_
 
-- [ ] **Audio offline verfügbar**
+- [ ] **Audio offline verfügbar** _(Sprachansagen nutzen die Geräte-Sprachausgabe statt Audiodateien; Verfügbarkeit offline hängt von installierten Stimmen ab, ungeprüft)_
 
-- [ ] **Übungsbilder/GIFs/SVGs offline verfügbar**
+- [ ] **Übungsbilder/GIFs/SVGs offline verfügbar** _(Cache-Regel /media/ (CacheFirst) vorbereitet; es gibt noch keine Medien)_
 
-- [ ] **Rezepte offline verfügbar**
+- [ ] **Rezepte offline verfügbar** _(folgt mit Phase 12)_
 
 ---
 
@@ -469,7 +469,7 @@ Service Worker
 → kontrolliertes Update
 ```
 
-- [ ] **Offline-Fallback**
+- [x] **Offline-Fallback** _(SPA-Fallback auf index.html, Deep-Link offline getestet; kontrolliertes Update mit Banner)_
 
   **Erklärung:** Die App soll bei fehlender Internetverbindung nicht einfach eine Browser-Fehlerseite anzeigen.
 
