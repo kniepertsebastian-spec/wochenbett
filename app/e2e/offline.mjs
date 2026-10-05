@@ -1,5 +1,5 @@
 // Offline-Test: Flugmodus, Reload, "App schließen", Workout, Speichern
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, launch, onboard, startExercise } from './helpers.mjs'
 
 const { browser, context, page, errors } = await launch()
 let p = page
@@ -17,8 +17,8 @@ p = await context.newPage()
 await p.goto(BASE + '/library')
 await p.getByRole('heading', { name: 'Übungen', exact: true }).waitFor()
 check('Offline neu öffnen (Deep-Link)', true)
-await p.getByRole('button', { name: '2 Min' }).click()
-await p.getByRole('button', { name: 'Pause' }).waitFor()
+await p.getByRole('button', { name: '2 Min', exact: true }).click()
+await startExercise(p)
 check('Offline Workout starten', true)
 for (let i = 0; i < 12; i++) {
   if (await p.getByRole('heading', { name: 'Geschafft' }).isVisible()) break

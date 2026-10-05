@@ -5,6 +5,8 @@ type Props = {
   running: boolean
   onDone?: () => void
   onTick?: (left: number) => void
+  /** Nur die Sekundenzahl im Fließtext anzeigen. */
+  inline?: boolean
 }
 
 function format(total: number) {
@@ -14,7 +16,7 @@ function format(total: number) {
 }
 
 /** Countdown. Anzeige ist ein Text; die Ansage per aria-live nur alle 10 s und am Ende, um Screenreader nicht zu fluten. */
-export function Timer({ seconds, running, onDone, onTick }: Props) {
+export function Timer({ seconds, running, onDone, onTick, inline }: Props) {
   const [left, setLeft] = useState(seconds)
   const doneRef = useRef(onDone)
   const tickRef = useRef(onTick)
@@ -46,6 +48,8 @@ export function Timer({ seconds, running, onDone, onTick }: Props) {
     tickRef.current?.(left)
     if (left === 0) doneRef.current?.()
   }, [left])
+
+  if (inline) return <span className="font-semibold tabular-nums">{left}</span>
 
   const announce = left === 0 || left % 10 === 0 ? `${left} Sekunden verbleibend` : ''
   return (

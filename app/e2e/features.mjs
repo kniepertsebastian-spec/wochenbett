@@ -14,7 +14,7 @@ for (const t of ['5', 'keine', 'nein', 'gut']) await p.getByText(t, { exact: tru
 await p.getByLabel('Nichts davon').check()
 await p.getByRole('button', { name: 'Weiter' }).click()
 await p.getByRole('heading', { name: /Recovery/ }).waitFor()
-check('Baby auf dem Arm: nur Einhand-Übungen', (await p.getByText('Einhand-geeignet').count()) === (await p.locator('main h3').count()))
+check('Baby auf dem Arm: nur Einhand-Übungen', (await p.getByText(/Einhand-geeignet$/).count()) === (await p.locator('main h3').count()))
 
 await p.goto(BASE + '/diastasis')
 await p.locator('label', { hasText: /^2$/ }).first().click()

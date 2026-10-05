@@ -2,23 +2,28 @@ import { describe, expect, it } from 'vitest'
 import { exercises } from '../content/exercises'
 import { validateExercises, isServable } from '../content/validate'
 import type { Readiness, UserState } from '../domain/types'
-import { isEligible } from './eligibility'
-import { applyRegressions, canAdvancePhase, regress } from './progression'
+import { ineligibleReason, isEligible } from './eligibility'
+import { applyRegressions, canAdvancePhase, maxSelectablePhase, regress, suggestStartPhase } from './progression'
 import { assessReadiness } from './readiness'
 import { highestUrgency } from './redflags'
-import { recommend } from './recommend'
+import { buildBedSet, recommend } from './recommend'
 
 const ok: Readiness = { energy: 5, pain: 'none', pelvicPressure: false, lastSession: 'good', redFlags: [] }
-const vaginal: UserState = { daysSinceBirth: 120, birthType: 'vaginal', medicalClearance: true, currentPhase: 3, doming: false }
+const vaginal: UserState = { daysSinceBirth: 120, birthType: 'vaginal', medicalClearance: true, currentPhase: 3, doming: false, equipment: ['chair' as const, 'weight' as const] }
 const byId = (id: string) => exercises.find((e) => e.id === id)!
 
 describe('Katalog', () => {
   it('ist gültig (Referenzen, Sicherheitsfelder, Regressionen)', () => {
     expect(validateExercises(exercises, '2026-10-06')).toEqual([])
   })
-  it('hat 20–25 Übungen', () => {
+  it('hat mindestens 20 Übungen, alle mit Erklärung (Warum)', () => {
     expect(exercises.length).toBeGreaterThanOrEqual(20)
-    expect(exercises.length).toBeLessThanOrEqual(25)
+    for (const e of exercises) expect(e.why.length, e.id).toBeGreaterThan(40)
+  })
+  it('hat kleine Übungen für nebenbei im Bett', () => {
+    const bed = exercises.filter((e) => e.bedFriendly)
+    expect(bed.length).toBeGreaterThanOrEqual(8)
+    for (const e of bed) expect(e.phase, e.id).toBeLessThanOrEqual(2)
   })
   it('Entwürfe werden in Produktion nicht ausgespielt', () => {
     expect(exercises.every((e) => !isServable(e.meta, true))).toBe(true)
@@ -74,7 +79,7 @@ describe('Safety: Red Flags & Ampel', () => {
 })
 
 describe('Safety: Eignung', () => {
-  const early: UserState = { daysSinceBirth: 20, birthType: 'cesarean', medicalClearance: false, currentPhase: 4, doming: false }
+  const early: UserState = { daysSinceBirth: 20, birthType: 'cesarean', medicalClearance: false, currentPhase: 4, doming: false, equipment: ['chair' as const, 'weight' as const] }
   it('Kaiserschnitt + frühe Phase → ungeeignete Übungen nicht anzeigen', () => {
     const r = recommend(early, ok, exercises)
     const list = r.kind === 'stop' ? [] : r.exercises
@@ -100,6 +105,62 @@ describe('Safety: Eignung', () => {
   })
   it('Ohne Sicherheitsfelder wird nie angeboten (fail-closed)', () => {
     expect(isEligible({ ...byId('pelvic-tilt'), stopCriteria: [] }, vaginal, ok)).toBe(false)
+  })
+})
+
+describe('Bett-Übungen', () => {
+  it('Bett-Set enthält nur geeignete Bett-Übungen und respektiert Beschwerden', () => {
+    const set = buildBedSet({ ...vaginal, currentPhase: 1 }, ok, exercises, 5)
+    expect(set.length).toBeGreaterThanOrEqual(2)
+    expect(set.every((e) => e.bedFriendly)).toBe(true)
+    const painful = buildBedSet({ ...vaginal, currentPhase: 1 }, { ...ok, pain: 'moderate' }, exercises, 5)
+    expect(painful.every((e) => !e.contraindications.some((c) => c.condition === 'pain'))).toBe(true)
+  })
+})
+
+describe('Hilfsmittel', () => {
+  it('Übungen mit Ball/Band erscheinen nur, wenn vorhanden', () => {
+    const ball = exercises.find((e) => e.id === 'ball-wall-squat')!
+    expect(isEligible(ball, vaginal, ok)).toBe(false)
+    expect(isEligible(ball, { ...vaginal, equipment: ['chair', 'weight', 'gymball'] }, ok)).toBe(true)
+    expect(ineligibleReason(ball, vaginal, ok)).toContain('Gymnastikball')
+  })
+  it('liefert verständliche Gründe', () => {
+    const early: UserState = { ...vaginal, birthType: 'cesarean', daysSinceBirth: 20 }
+    expect(ineligibleReason(byId('glute-bridge'), early, ok)).toContain('Kaiserschnitt')
+    expect(ineligibleReason(byId('bird-dog'), { ...vaginal, currentPhase: 2 }, ok)).toContain('Phase 3')
+    expect(ineligibleReason(byId('glute-bridge'), vaginal, ok)).toBeNull()
+  })
+})
+
+describe('Begründung der Empfehlung', () => {
+  it('Phase 1 + volle Energie erklärt, warum nur Atmung/Recovery', () => {
+    const r = recommend({ ...vaginal, currentPhase: 1 }, ok, exercises)
+    expect(r.why.join(' ')).toContain('Phase 1')
+    expect(r.why.join(' ')).toContain('Energie 5')
+    expect(r.why.join(' ')).toContain('unter Verlauf frei')
+  })
+  it('jede Empfehlung hat eine Begründung', () => {
+    for (const rd of [ok, { ...ok, energy: 1 as const }, { ...ok, pain: 'mild' as const }, { ...ok, redFlags: ['fever' as const] }]) {
+      expect(recommend(vaginal, rd, exercises).why.length).toBeGreaterThan(0)
+    }
+  })
+})
+
+describe('Startphase', () => {
+  it('Zeit allein genügt nie: ohne bisherige Aktivität Phase 1', () => {
+    expect(suggestStartPhase(300, 'none')).toBe(1)
+  })
+  it('mit Aktivität begrenzt durch Zeit-Untergrenze, nie Phase 4', () => {
+    expect(suggestStartPhase(10, 'course')).toBe(1)
+    expect(suggestStartPhase(20, 'light')).toBe(2)
+    expect(suggestStartPhase(300, 'light')).toBe(2)
+    expect(suggestStartPhase(300, 'course')).toBe(3)
+  })
+  it('manuelle Phasenwahl: Phase 4 braucht Freigabe', () => {
+    expect(maxSelectablePhase(300, false)).toBe(3)
+    expect(maxSelectablePhase(300, true)).toBe(4)
+    expect(maxSelectablePhase(5, true)).toBe(1)
   })
 })
 

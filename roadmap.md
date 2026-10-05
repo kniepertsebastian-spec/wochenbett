@@ -274,7 +274,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
   **Erklärung:** Die konkrete Freigabe einzelner Übungen sollte fachlich geprüft werden.
 
-- [x] **20–25 Basisübungen kuratieren** _(22 Übungen in app/src/content/exercises.ts; Entwurf, fachlich ungeprüft)_
+- [x] **20–25 Basisübungen kuratieren** _(33 Übungen (inkl. 14 Bett-Übungen und 4 mit Ball/Band) in app/src/content/exercises.ts; Entwurf, fachlich ungeprüft)_
 
   Beispielsweise:
 
@@ -1226,3 +1226,13 @@ Die Nutzerin soll nicht einfach einen starren Trainingsplan abarbeiten. Die App 
 ### 10. Kein Druck
 
 Der wichtigste Fortschritt ist nicht die Anzahl der absolvierten Workouts, sondern dass sich die Nutzerin im Alltag wieder sicherer und belastbarer fühlt.
+
+---
+
+# Offene Ideen aus dem ersten Praxistest
+
+- [ ] **Bilder oder Videos zu den Übungen** _(Datenmodell `media` und Anzeige sind vorbereitet, Cache-Regel `/media/` ebenfalls; es fehlen lizenzierte Aufnahmen oder Illustrationen, am besten von der Physiotherapeutin)_
+- [ ] **Entscheidung: Konten und Synchronisation** _(aktuell lokal pro Browser; Optionen siehe Chat/README, Entscheidung offen)_
+- [ ] **Ernährungshinweise abhängig von Woche, Stillen oder Blutverlust** _(erst nach fachlicher Prüfung, siehe docs/content-governance.md)_
+- [ ] **Quellen für die Übungen ergänzen** _(Übungen wurden aus allgemeinem Rückbildungs-Wissen zusammengestellt, ohne Einzelquellen)_
+

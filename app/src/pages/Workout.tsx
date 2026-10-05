@@ -13,6 +13,8 @@ import { useSettings } from '../hooks/useSettings'
 import { useUserState } from '../hooks/useUserState'
 import { useWakeLock } from '../hooks/useWakeLock'
 
+const PREP_SECONDS = 10
+
 const defaultReadiness: Readiness = { energy: 3, pain: 'none', pelvicPressure: false, lastSession: 'ok', redFlags: [] }
 
 export function WorkoutPage() {
@@ -32,7 +34,10 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   const audio = useAudio(silent ? { speech: false, gong: false, vibration: settings.vibration } : settings)
   const [list, setList] = useState(initial)
   const [idx, setIdx] = useState(0)
-  const [running, setRunning] = useState(true)
+  // Jede Übung beginnt im Bereit-Modus: erst lesen und in Position gehen, dann selbst starten.
+  // Ab der zweiten Übung startet sie nach 10 Sekunden von selbst (Start überspringt das Warten).
+  const [prep, setPrep] = useState(true)
+  const [running, setRunning] = useState(false)
   const [outcomes, setOutcomes] = useState<Record<string, Outcome>>({})
   const [problemIds, setProblemIds] = useState<string[]>([])
   const [finished, setFinished] = useState(false)
@@ -40,7 +45,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   const [warn, setWarn] = useState(false)
   const [flags, setFlags] = useState<RedFlagId[]>([])
   const [reaction, setReaction] = useState<WorkoutReaction | null>(null)
-  const wake = useWakeLock(!finished && running)
+  const wake = useWakeLock(!finished)
 
   const current = list[idx]
   const [startedAt] = useState(() => Date.now())
@@ -57,24 +62,29 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
       }
       return i + 1
     })
+    setPrep(true)
+    setRunning(false)
   }, [list.length])
 
-  // Ansage zu Beginn jeder Übung (im Screenless-Modus inkl. Anleitung)
+  const startExercise = useCallback(() => {
+    setPrep(false)
+    setRunning(true)
+  }, [])
+
+  // Beim Start der Übung (nicht im Bereit-Modus): Gong und Startansage
   useEffect(() => {
-    if (!current || !running || spoken.current === idx) return
+    if (!current || !running || prep || spoken.current === idx) return
     spoken.current = idx
     audio.gong()
-    const start = current.audioCues.find((c) => c.trigger === 'start')?.text ?? current.name
-    audio.speak(settings.screenless ? `${current.name}. ${current.instructions.join(' ')}` : start)
-    instructionsFor.current = settings.screenless ? idx : -1
-  }, [current, idx, running, audio, settings.screenless])
+    audio.speak(current.audioCues.find((c) => c.trigger === 'start')?.text ?? current.name)
+  }, [current, idx, running, prep, audio])
 
-  // Wechsel in den Screenless-Modus mitten in einer Übung: Anleitung nachholen
+  // Im Bereit-Modus mit Screenless-Modus: Anleitung vorlesen (einmal pro Übung)
   useEffect(() => {
-    if (!settings.screenless || !current || !running || instructionsFor.current === idx) return
+    if (!settings.screenless || !current || instructionsFor.current === idx) return
     instructionsFor.current = idx
     audio.speak(`${current.name}. ${current.instructions.join(' ')}`)
-  }, [settings.screenless, current, idx, running, audio])
+  }, [settings.screenless, current, idx, audio])
 
   useEffect(() => {
     if (!running) audio.stop()
@@ -111,6 +121,9 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
     setProblemIds((p) => [...p, current.id])
     setList((l) => l.map((e, i) => (i === idx ? alt : e)))
     spoken.current = -1
+    instructionsFor.current = -1
+    setPrep(true)
+    setRunning(false)
   }
 
   async function saveAndLeave(stopFlags?: RedFlagId[]) {
@@ -130,7 +143,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
     ])
     setSession(null)
     if (stopFlags) {
-      setRecommendation({ kind: 'stop', light: 'red', reasons: stopFlags, urgency: highestUrgency(stopFlags) })
+      setRecommendation({ kind: 'stop', light: 'red', reasons: stopFlags, urgency: highestUrgency(stopFlags), why: ['Während der Einheit wurde ein Warnzeichen gemeldet.'] })
       nav('/plan', { replace: true })
     } else nav('/', { replace: true })
   }
@@ -165,10 +178,19 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   const controls = (
     <div className="pb-safe fixed inset-x-0 bottom-0 border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-800 dark:bg-stone-950">
       <div className="mx-auto grid max-w-md grid-cols-3 gap-2">
-        <Button variant="secondary" disabled={idx === 0} onClick={() => setIdx((i) => Math.max(0, i - 1))}>
+        <Button
+          variant="secondary"
+          disabled={idx === 0}
+          onClick={() => {
+            setIdx((i) => Math.max(0, i - 1))
+            setPrep(true)
+            setRunning(false)
+            spoken.current = -1
+          }}
+        >
           Zurück
         </Button>
-        <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Weiter'}</Button>
+        <Button onClick={() => (prep ? startExercise() : setRunning((r) => !r))}>{prep ? 'Start' : running ? 'Pause' : 'Weiter'}</Button>
         <Button
           variant="secondary"
           onClick={() => {
@@ -188,12 +210,16 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   if (settings.screenless) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black p-6 text-stone-300">
-        <p aria-live="polite">{current.name}. {running ? 'Läuft' : 'Pausiert'}</p>
+        <p aria-live="polite">{current.name}. {prep ? 'Bereit, tippe auf Start' : running ? 'Läuft' : 'Pausiert'}</p>
         <div className="hidden">
-          <Timer key={`${idx}-${current.id}`} seconds={current.duration} running={running} onTick={onTick} onDone={() => { mark(current.id, 'done'); setTimeout(next, 1200) }} />
+          {prep ? (
+            idx > 0 && <Timer key={`prep-${idx}`} seconds={PREP_SECONDS} running onDone={startExercise} />
+          ) : (
+            <Timer key={`${idx}-${current.id}`} seconds={current.duration} running={running} onTick={onTick} onDone={() => { mark(current.id, 'done'); setTimeout(next, 1200) }} />
+          )}
         </div>
-        <button type="button" onClick={() => setRunning((r) => !r)} className="min-h-40 w-full max-w-sm rounded-3xl bg-stone-800 text-2xl">
-          {running ? 'Pause' : 'Weiter'}
+        <button type="button" onClick={() => (prep ? startExercise() : setRunning((r) => !r))} className="min-h-40 w-full max-w-sm rounded-3xl bg-stone-800 text-2xl">
+          {prep ? 'Start' : running ? 'Pause' : 'Weiter'}
         </button>
         <button type="button" onClick={() => setSetting('screenless', false)} className="min-h-14 w-full max-w-sm rounded-2xl border border-stone-600">
           Bildschirm wieder anzeigen
@@ -206,8 +232,26 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
     <main className="pt-safe mx-auto max-w-md space-y-4 p-4 pb-48">
       <ProgressBar value={idx + 1} max={list.length} label="Übung" />
       <h1 className="text-2xl font-semibold">{current.name}</h1>
-      <Timer key={`${idx}-${current.id}`} seconds={current.duration} running={running} onTick={onTick} onDone={() => { mark(current.id, 'done'); setTimeout(next, 1200) }} />
+      {prep ? (
+        <div className="space-y-2 rounded-2xl border border-stone-300 p-4 dark:border-stone-700">
+          <p className="font-medium">Mach dich bereit: lies die Anleitung und geh in Position.</p>
+          {idx > 0 ? (
+            <p>
+              Die Übung startet automatisch in <Timer key={`prep-${idx}`} seconds={PREP_SECONDS} running={!menu && !warn} onDone={startExercise} inline /> Sekunden. Mit Start geht es sofort los.
+            </p>
+          ) : (
+            <p className="text-stone-600 dark:text-stone-400">Der Timer läuft erst, wenn du auf Start tippst.</p>
+          )}
+          <p className="text-3xl font-semibold tabular-nums">{Math.floor(current.duration / 60)}:{String(current.duration % 60).padStart(2, '0')}</p>
+        </div>
+      ) : (
+        <Timer key={`${idx}-${current.id}`} seconds={current.duration} running={running} onTick={onTick} onDone={() => { mark(current.id, 'done'); setTimeout(next, 1200) }} />
+      )}
       <p className="text-stone-600 dark:text-stone-400">{current.description}</p>
+      <details className="rounded-2xl border border-stone-200 p-3 dark:border-stone-800">
+        <summary className="min-h-10 cursor-pointer font-medium">Warum diese Übung?</summary>
+        <p className="mt-2">{current.why}</p>
+      </details>
       <ol className="list-decimal space-y-1 pl-5">
         {current.instructions.map((s, i) => (
           <li key={i}>{s}</li>

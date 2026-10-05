@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
-import type { UserProfile, UserState } from '../domain/types'
+import { DEFAULT_EQUIPMENT } from '../domain/equipment'
+import type { EquipmentId, UserProfile, UserState } from '../domain/types'
 
 export const daysBetween = (isoDate: string, now = new Date()) =>
   Math.max(0, Math.floor((now.getTime() - new Date(isoDate).getTime()) / 86_400_000))
@@ -17,7 +18,8 @@ export function useUserState(): { profile: UserProfile | null; user: UserState |
     const profile = (await db.userProfile.get('me')) ?? null
     const progress = await db.userProgress.get('me')
     const lastDiastasis = await db.diastasisLogs.orderBy('date').last()
-    return { profile, phase: progress?.currentPhase ?? 1, doming: lastDiastasis?.doming ?? false }
+    const equipment = ((await db.appSettings.get('equipment'))?.value as EquipmentId[] | undefined) ?? DEFAULT_EQUIPMENT
+    return { profile, phase: progress?.currentPhase ?? 1, doming: lastDiastasis?.doming ?? false, equipment }
   }, [])
   if (!data) return { profile: null, user: null, loading: true }
   if (!data.profile) return { profile: null, user: null, loading: false }
@@ -30,6 +32,7 @@ export function useUserState(): { profile: UserProfile | null; user: UserState |
       medicalClearance: data.profile.medicalClearance,
       currentPhase: data.phase,
       doming: data.doming,
+      equipment: data.equipment,
     },
   }
 }

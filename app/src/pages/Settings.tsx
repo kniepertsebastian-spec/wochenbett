@@ -4,7 +4,10 @@ import { db, requestPersistence } from '../db/db'
 import { deleteAllData, exportAll, importAll, ImportError } from '../db/privacy'
 import type { BirthType } from '../domain/types'
 import { useSettings } from '../hooks/useSettings'
+import { DEFAULT_EQUIPMENT, EQUIPMENT } from '../domain/equipment'
+import type { EquipmentId } from '../domain/types'
 import { useProfile } from '../hooks/useUserState'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 export function SettingsPage() {
   const profile = useProfile()
@@ -12,6 +15,11 @@ export function SettingsPage() {
   const [confirm, setConfirm] = useState(false)
   const [msg, setMsg] = useState('')
   const file = useRef<HTMLInputElement>(null)
+  const owned = useLiveQuery(async () => ((await db.appSettings.get('equipment'))?.value as EquipmentId[] | undefined) ?? DEFAULT_EQUIPMENT, [])
+  const toggleEquipment = (id: EquipmentId) => {
+    const cur = owned ?? DEFAULT_EQUIPMENT
+    return db.appSettings.put({ key: 'equipment', value: cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id] })
+  }
 
   async function doExport() {
     const data = await exportAll(db)
@@ -59,16 +67,27 @@ export function SettingsPage() {
         </label>
       </Card>
 
+      <Card className="space-y-1">
+        <h2 className="font-semibold">Meine Trainingsmittel</h2>
+        <p className="text-sm text-stone-600 dark:text-stone-400">Übungen mit Hilfsmitteln erscheinen nur, wenn du sie hast.</p>
+        {owned && EQUIPMENT.map((q) => (
+          <label key={q.id} className="flex min-h-12 items-center gap-3">
+            <input type="checkbox" className="size-5" checked={owned.includes(q.id)} onChange={() => toggleEquipment(q.id)} />
+            {q.label}
+          </label>
+        ))}
+      </Card>
+
       {profile && (
         <Card className="space-y-3">
           <h2 className="font-semibold">Profil</h2>
           <label className="block">
             <span className="mb-1 block">Geburtsdatum</span>
-            <input type="date" value={profile.birthDate} max={new Date().toISOString().slice(0, 10)} onChange={(e) => e.target.value && db.userProfile.update('me', { birthDate: e.target.value })} className="min-h-12 w-full rounded-xl border border-stone-300 bg-transparent px-3 dark:border-stone-700" />
+            <input type="date" value={profile.birthDate} max={new Date().toISOString().slice(0, 10)} onChange={(e) => e.target.value && db.userProfile.update('me', { birthDate: e.target.value })} className="min-h-12 w-full rounded-xl border border-stone-300 px-3 dark:border-stone-700" />
           </label>
           <label className="block">
             <span className="mb-1 block">Geburtsart</span>
-            <select value={profile.birthType} onChange={(e) => db.userProfile.update('me', { birthType: e.target.value as BirthType })} className="min-h-12 w-full rounded-xl border border-stone-300 bg-transparent px-3 dark:border-stone-700">
+            <select value={profile.birthType} onChange={(e) => db.userProfile.update('me', { birthType: e.target.value as BirthType })} className="min-h-12 w-full rounded-xl border border-stone-300 px-3 dark:border-stone-700">
               <option value="vaginal">Spontangeburt</option>
               <option value="cesarean">Kaiserschnitt</option>
               <option value="unknown">Keine Angabe</option>

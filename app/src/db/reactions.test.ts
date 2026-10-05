@@ -19,7 +19,7 @@ describe('Reaktion am Folgetag', () => {
     db.close()
   })
   it('Folgetag-Beschwerden verhindern die Phasenfreigabe, obwohl direkt "gut"', () => {
-    const user = { daysSinceBirth: 100, birthType: 'vaginal' as const, medicalClearance: true, currentPhase: 1 as const, doming: false }
+    const user = { daysSinceBirth: 100, birthType: 'vaginal' as const, medicalClearance: true, currentPhase: 1 as const, doming: false, equipment: ['chair' as const, 'weight' as const] }
     const ok = { energy: 5 as const, pain: 'none' as const, pelvicPressure: false, lastSession: 'good' as const, redFlags: [] }
     const direct = [{ reaction: 'good' as const }, { reaction: 'good' as const }, { reaction: 'good' as const }]
     expect(canAdvancePhase(user, ok, direct.map(effectiveReaction)).allowed).toBe(true)

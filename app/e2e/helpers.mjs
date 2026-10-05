@@ -13,10 +13,11 @@ export async function launch(opts = {}) {
   return { browser, context, page, errors }
 }
 
-export async function onboard(page, { birth = '2026-07-01', type = 'Spontangeburt' } = {}) {
+export async function onboard(page, { birth = '2026-07-01', type = 'Spontangeburt', level = /Noch nichts/ } = {}) {
   await page.goto(BASE)
   await page.getByLabel('Geburtsdatum deines Babys').fill(birth)
   await page.getByLabel(type).check()
+  await page.getByLabel(level).check()
   await page.getByLabel(/Ich habe verstanden/).check()
   await page.getByRole('button', { name: "Los geht's" }).click()
   await page.getByRole('heading', { name: 'Heute' }).waitFor()
@@ -25,4 +26,10 @@ export async function onboard(page, { birth = '2026-07-01', type = 'Spontangebur
 export function check(name, cond, extra = '') {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra ? ' – ' + extra : ''}`)
   if (!cond) process.exitCode = 1
+}
+
+/** Startet die aktuelle Übung im Player (jede Übung beginnt im Bereit-Modus). */
+export async function startExercise(page) {
+  await page.getByRole('button', { name: 'Start', exact: true }).click()
+  await page.getByRole('button', { name: 'Pause' }).waitFor()
 }

@@ -1,5 +1,5 @@
 // Kernablauf: Onboarding → Red Flag → Plan → Player → Speichern → Löschen
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, launch, onboard, startExercise } from './helpers.mjs'
 
 const { browser, page: p, errors } = await launch()
 await onboard(p)
@@ -27,7 +27,11 @@ await p.getByRole('heading', { name: /Recovery|Deine Einheit/ }).waitFor()
 check('Plan wird angezeigt', true)
 check('Keine Gesundheitsdaten in der URL', new URL(p.url()).search === '' && new URL(p.url()).pathname === '/plan')
 await p.getByRole('button', { name: 'Starten' }).click()
-await p.getByRole('button', { name: 'Pause' }).waitFor()
+await p.getByRole('button', { name: 'Start', exact: true }).waitFor()
+check('Warum-Erklärung vorhanden', await p.getByText('Warum diese Übung?').isVisible())
+await p.waitForTimeout(2500)
+check('Timer startet erst nach Start (pausiert im Bereit-Modus)', await p.getByText('Der Timer läuft erst, wenn du auf Start tippst.').isVisible())
+await startExercise(p)
 await p.getByRole('button', { name: 'Pause' }).click()
 check('Pause', await p.getByRole('button', { name: 'Weiter' }).isVisible())
 await p.getByRole('button', { name: 'Übung wechseln / Beschwerden' }).click()

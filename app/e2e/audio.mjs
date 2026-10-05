@@ -1,6 +1,6 @@
 // Audio-Cues, Gong, Vibration, Wake Lock: API-Aufrufe per Spion und simulierter Zeit.
 // (Hörbarkeit und echtes Display-Verhalten lassen sich nur auf einem echten Gerät prüfen.)
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, launch, onboard, startExercise } from './helpers.mjs'
 
 const spies = () => {
   window.__spoken = []
@@ -24,8 +24,8 @@ const spies = () => {
 
 async function startRecovery(p, minutes = '2 Min') {
   await p.goto(BASE + '/library')
-  await p.getByRole('button', { name: minutes }).click()
-  await p.getByRole('button', { name: 'Pause' }).waitFor()
+  await p.getByRole('button', { name: minutes, exact: true }).click()
+  await p.getByRole('button', { name: 'Start', exact: true }).waitFor()
 }
 
 // 1) Normal: Ansagen, Gong, Vibration, Wake Lock
@@ -38,6 +38,10 @@ async function startRecovery(p, minutes = '2 Min') {
   await p.getByLabel('Vibration').click()
   await p.waitForTimeout(300)
   await startRecovery(p)
+  await p.clock.runFor(30_000)
+  check('Bereit-Modus: keine Ansagen, kein Gong vor dem Start', (await p.evaluate(() => window.__spoken)).length === 0 && (await p.evaluate(() => window.__gongs)) === 0)
+  await p.getByRole('button', { name: 'Start', exact: true }).click()
+  await p.getByRole('button', { name: 'Pause' }).waitFor()
   await p.clock.runFor(1000)
   const w1 = await p.evaluate(() => window.__wake)
   check('Wake Lock beim Start angefordert', w1.requested >= 1, JSON.stringify(w1))
@@ -70,7 +74,7 @@ async function startRecovery(p, minutes = '2 Min') {
   await p.getByLabel('Nichts davon').check()
   await p.getByRole('button', { name: 'Weiter' }).click()
   await p.getByRole('button', { name: 'Starten' }).click()
-  await p.getByRole('button', { name: 'Pause' }).waitFor()
+  await startExercise(p)
   await p.clock.runFor(70_000)
   check('Baby schläft: keine Ansagen', (await p.evaluate(() => window.__spoken)).length === 0)
   check('Baby schläft: kein Gong', (await p.evaluate(() => window.__gongs)) === 0)
@@ -89,7 +93,7 @@ async function startRecovery(p, minutes = '2 Min') {
   await p.clock.runFor(1500)
   const spoken = await p.evaluate(() => window.__spoken)
   check('Screenless: Anleitung wird vorgelesen', spoken.some((s) => s.length > 60), spoken.join(' | ').slice(0, 80))
-  check('Screenless: Pause-Knopf groß erreichbar', await p.getByRole('button', { name: 'Pause' }).isVisible())
+  check('Screenless: Start-Knopf groß erreichbar', await p.getByRole('button', { name: 'Start', exact: true }).isVisible())
   await browser.close()
 }
 
@@ -100,6 +104,7 @@ async function startRecovery(p, minutes = '2 Min') {
   await onboard(p)
   await startRecovery(p)
   check('Wake-Lock-Fallback: Hinweis sichtbar, App benutzbar', await p.getByText(/nicht wachhalten/).isVisible())
+  await p.getByRole('button', { name: 'Start', exact: true }).click()
   await p.getByRole('button', { name: 'Pause' }).click()
   check('Wake-Lock-Fallback: Bedienung funktioniert', await p.getByRole('button', { name: 'Weiter' }).isVisible())
   await browser.close()
