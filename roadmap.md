@@ -145,7 +145,7 @@ Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werde
 
 ## 1.1 Frontend-Projekt initialisieren
 
-- [ ] **Vite + React + TypeScript aufsetzen**
+- [x] **Vite + React + TypeScript aufsetzen** _(in `app/`, Build + Typecheck geprüft)_
 
   **Erklärung:** Vite übernimmt Development und Build-Prozess. React bildet die UI-Komponenten. TypeScript sorgt für typisierte Datenmodelle.
 
