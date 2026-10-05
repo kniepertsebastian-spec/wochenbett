@@ -103,13 +103,32 @@ describe('Safety: Eignung', () => {
   })
 })
 
+describe('Alltagssituationen', () => {
+  it('Einhand/Baby auf dem Arm → nur Einhand-geeignete Übungen', () => {
+    for (const s of ['one_hand', 'baby_arm'] as const) {
+      const r = recommend(vaginal, ok, exercises, { situation: s })
+      expect(r.kind).toBe('recovery')
+      expect(r.kind === 'recovery' && r.exercises.length > 0 && r.exercises.every((e) => e.oneHandFriendly)).toBe(true)
+    }
+  })
+  it('komplett erschöpft → 2-Minuten-Recovery, nur 5 Minuten → 5 Minuten', () => {
+    const a = recommend(vaginal, ok, exercises, { situation: 'exhausted' })
+    expect(a.kind === 'recovery' && a.durationMin).toBe(2)
+    const b = recommend(vaginal, ok, exercises, { situation: 'five_min' })
+    expect(b.kind === 'recovery' && b.durationMin).toBe(5)
+  })
+  it('Situation hebelt Red Flags nicht aus', () => {
+    expect(recommend(vaginal, { ...ok, redFlags: ['bleeding'] }, exercises, { situation: 'five_min' }).kind).toBe('stop')
+  })
+})
+
 describe('Progression (Empfehlung)', () => {
   it('Problem-Übungen werden in der Empfehlung automatisch regressiert', () => {
     const user = { ...vaginal, currentPhase: 3 as const }
-    const base = recommend(user, ok, exercises, 0)
+    const base = recommend(user, ok, exercises)
     const target = base.kind === 'workout' ? base.exercises.find((e) => e.regressions.length > 0) : undefined
     expect(target).toBeDefined()
-    const r = recommend(user, ok, exercises, 0, [target!.id])
+    const r = recommend(user, ok, exercises, { problemIds: [target!.id] })
     expect(r.kind === 'workout' && r.exercises.some((e) => e.id === target!.id)).toBe(false)
   })
 })

@@ -20,16 +20,16 @@ export function WorkoutPage() {
   const { user } = useUserState()
   if (!session) return <Navigate to="/" replace />
   if (!user) return null
-  return <Player key={session.exercises.map((e) => e.id).join()} initial={session.exercises} kind={session.kind} durationMin={session.durationMin} readiness={session.readiness ?? defaultReadiness} user={user} />
+  return <Player key={session.exercises.map((e) => e.id).join()} initial={session.exercises} kind={session.kind} durationMin={session.durationMin} silent={session.silent ?? false} readiness={session.readiness ?? defaultReadiness} user={user} />
 }
 
 type Outcome = 'done' | 'skipped' | 'problem'
 
-function Player({ initial, kind, durationMin, readiness, user }: { initial: Exercise[]; kind: 'workout' | 'recovery'; durationMin: number; readiness: Readiness; user: UserState }) {
+function Player({ initial, kind, durationMin, silent, readiness, user }: { initial: Exercise[]; kind: 'workout' | 'recovery'; durationMin: number; silent: boolean; readiness: Readiness; user: UserState }) {
   const nav = useNavigate()
   const { setSession, setRecommendation } = useSession()
   const [settings, setSetting] = useSettings()
-  const audio = useAudio(settings)
+  const audio = useAudio(silent ? { speech: false, gong: false, vibration: settings.vibration } : settings)
   const [list, setList] = useState(initial)
   const [idx, setIdx] = useState(0)
   const [running, setRunning] = useState(true)

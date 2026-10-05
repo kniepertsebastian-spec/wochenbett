@@ -651,11 +651,11 @@ Energie 5/5
 
 ## 10.2 Rektusdiastase
 
-- [ ] **Selbstbeobachtung statt Diagnose**
-- [ ] **Visuelle Anleitung**
-- [ ] **Doming beobachten**
-- [ ] **Messwerte dokumentieren**
-- [ ] **Verlauf darstellen**
+- [x] **Selbstbeobachtung statt Diagnose** _(app/src/pages/Diastasis.tsx; Texte Entwurf, fachlich ungeprüft)_
+- [x] **Visuelle Anleitung** _(SVG-Schema + Schritte; Entwurf, fachlich ungeprüft)_
+- [x] **Doming beobachten** _(Doming → keine Übungen mit Doming-Kontraindikation, im Browser getestet)_
+- [x] **Messwerte dokumentieren** _(Fingerbreiten + Notiz, lokal gespeichert)_
+- [x] **Verlauf darstellen** _(SVG-Diagramm + Tabelle)_
 
 **Erklärung:** Die App unterstützt die Dokumentation, ersetzt aber keine professionelle Untersuchung.
 
@@ -705,8 +705,8 @@ Eigene Einstiegsmöglichkeiten:
 
 ## 11.2 Einhand-Übungen
 
-- [ ] Übungen nach `oneHandFriendly` filtern
-- [ ] geeignete Übungen für Situationen mit Baby kennzeichnen
+- [x] Übungen nach `oneHandFriendly` filtern _(Übungen-Seite und Baby-Modus, getestet)_
+- [x] geeignete Übungen für Situationen mit Baby kennzeichnen _(Kennzeichnung 'Einhand-geeignet'; jede Übung braucht noch fachliche Prüfung)_
 
 **Erklärung:** Für jede einzelne Übung muss separat geprüft werden, ob sie in dieser Situation sicher ist.
 

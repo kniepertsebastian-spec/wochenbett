@@ -5,7 +5,7 @@ import { RED_FLAGS, urgencyMessage } from '../engine/redflags'
 
 export function PlanPage() {
   const nav = useNavigate()
-  const { recommendation: r, setSession, lastReadiness } = useSession()
+  const { recommendation: r, setSession, lastReadiness, situation } = useSession()
   if (!r) return <Navigate to="/" replace />
 
   if (r.kind === 'stop') {
@@ -31,7 +31,7 @@ export function PlanPage() {
   }
 
   const start = () => {
-    setSession({ kind: r.kind, durationMin: r.durationMin, exercises: r.exercises, readiness: lastReadiness })
+    setSession({ kind: r.kind, durationMin: r.durationMin, exercises: r.exercises, readiness: lastReadiness, silent: situation === 'baby_sleeping' })
     nav('/workout')
   }
   const title = r.kind === 'recovery' ? `Recovery · ${r.durationMin} Minuten` : `Deine Einheit · ca. ${r.durationMin} Minuten`

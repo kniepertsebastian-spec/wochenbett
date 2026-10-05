@@ -122,3 +122,6 @@ export type Recommendation =
   | { kind: 'stop'; light: 'red'; reasons: RedFlagId[]; urgency: Urgency }
   | { kind: 'recovery'; light: 'yellow' | 'green'; durationMin: 2 | 5 | 10; exercises: Exercise[] }
   | { kind: 'workout'; light: 'green'; durationMin: 5 | 10 | 15; exercises: Exercise[]; allowProgression: boolean }
+
+/** Alltagssituation mit Baby (Phase 11). Ersetzt nie den Check-in. */
+export type Situation = 'baby_sleeping' | 'baby_arm' | 'one_hand' | 'exhausted' | 'five_min'

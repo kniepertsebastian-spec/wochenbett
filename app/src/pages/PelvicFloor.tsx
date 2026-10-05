@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button, Card, CheckIn, WarningBanner } from '../components'
 import { useSession } from '../app/session'
 import { exerciseById } from '../content/exercises'
@@ -66,6 +66,12 @@ export function PelvicFloorPage() {
           <Button variant="secondary" onClick={() => start(m.id)}>Üben</Button>
         </Card>
       ))}
+
+      <Card className="space-y-2">
+        <h2 className="font-semibold">Bauchmitte beobachten</h2>
+        <p>Selbstbeobachtung der Bauchmitte mit Verlauf, zum Besprechen mit deiner Fachperson.</p>
+        <Link to="/diastasis" className="block min-h-12 rounded-2xl bg-stone-200 px-5 py-3 text-center dark:bg-stone-800">Öffnen</Link>
+      </Card>
 
       <h2 className="text-xl font-semibold">Im Alltag</h2>
       <WarningBanner level="yellow">Entwurf: Diese Tipps wurden noch nicht fachlich geprüft.</WarningBanner>

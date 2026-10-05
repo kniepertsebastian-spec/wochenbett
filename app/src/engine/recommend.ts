@@ -1,4 +1,4 @@
-import type { Exercise, Readiness, Recommendation, UserState } from '../domain/types'
+import type { Exercise, Readiness, Recommendation, Situation, UserState } from '../domain/types'
 import { isEligible } from './eligibility'
 import { assessReadiness } from './readiness'
 import { applyRegressions } from './progression'
@@ -26,7 +26,14 @@ function pickWithinBudget(candidates: Exercise[], budgetSec: number, rotate: num
  * Zentrale, reine Entscheidungsfunktion. Die UI entscheidet nie selbst über Freigaben.
  * `rotate` sorgt für Abwechslung (z. B. Tag des Jahres), das Ergebnis bleibt deterministisch.
  */
-export function recommend(user: UserState, readiness: Readiness, catalog: Exercise[], rotate = 0, problemIds: string[] = []): Recommendation {
+export type RecommendOptions = { rotate?: number; problemIds?: string[]; situation?: Situation }
+
+export function recommend(user: UserState, readiness: Readiness, fullCatalog: Exercise[], opts: RecommendOptions = {}): Recommendation {
+  const { rotate = 0, problemIds = [], situation } = opts
+  // Situationen engen nur ein, die Sicherheitslogik bleibt unverändert
+  const catalog = situation === 'baby_arm' || situation === 'one_hand' ? fullCatalog.filter((e) => e.oneHandFriendly) : fullCatalog
+  if (situation === 'exhausted') readiness = { ...readiness, energy: 1 }
+  if (situation === 'five_min' && readiness.energy > 3) readiness = { ...readiness, energy: 3 }
   const assessment = assessReadiness(readiness)
   if (assessment.light === 'red') {
     return { kind: 'stop', light: 'red', reasons: assessment.redFlags, urgency: highestUrgency(assessment.redFlags) }

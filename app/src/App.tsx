@@ -4,6 +4,7 @@ import { SessionProvider } from './app/session'
 import { UpdateBanner } from './app/UpdateBanner'
 import { useProfile } from './hooks/useUserState'
 import { CheckInPage } from './pages/CheckIn'
+import { DiastasisPage } from './pages/Diastasis'
 import { ExerciseDetailPage, LibraryPage } from './pages/Library'
 import { Onboarding } from './pages/Onboarding'
 import { PelvicFloorPage } from './pages/PelvicFloor'
@@ -27,6 +28,7 @@ function Gate() {
         <Route path="library" element={<LibraryPage />} />
         <Route path="library/:id" element={<ExerciseDetailPage />} />
         <Route path="pelvic-floor" element={<PelvicFloorPage />} />
+        <Route path="diastasis" element={<DiastasisPage />} />
         <Route path="progress" element={<ProgressPage />} />
         <Route path="more" element={<SettingsPage />} />
         <Route path="*" element={<TodayPage />} />

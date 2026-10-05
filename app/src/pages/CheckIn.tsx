@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { exercises } from '../content/exercises'
 import { Button, Card, CheckIn as Choice, WarningBanner } from '../components'
 import { useSession } from '../app/session'
 import { db } from '../db/db'
-import type { LastSession, PainLevel, Readiness, RedFlagId } from '../domain/types'
+import type { LastSession, PainLevel, Readiness, RedFlagId, Situation } from '../domain/types'
 import { assessReadiness } from '../engine/readiness'
 import { RED_FLAGS, RED_FLAG_IDS } from '../engine/redflags'
 import { recommend } from '../engine/recommend'
@@ -12,6 +12,9 @@ import { useUserState } from '../hooks/useUserState'
 
 export function CheckInPage() {
   const nav = useNavigate()
+  const [params] = useSearchParams()
+  const sit = params.get('s')
+  const situation = (['baby_sleeping', 'baby_arm', 'one_hand', 'exhausted', 'five_min'] as const).find((x) => x === sit) as Situation | undefined
   const { user } = useUserState()
   const { setRecommendation } = useSession()
   const [energy, setEnergy] = useState<Readiness['energy'] | null>(null)
@@ -42,7 +45,7 @@ export function CheckInPage() {
     // Übungen mit gemeldeten Problemen in den letzten 14 Tagen
     const since = new Date(Date.now() - 14 * 86_400_000).toISOString()
     const problems = (await db.exerciseHistory.where('date').above(since).toArray()).filter((h) => h.outcome === 'problem').map((h) => h.exerciseId)
-    setRecommendation(recommend(user, readiness, exercises, day, problems), readiness)
+    setRecommendation(recommend(user, readiness, exercises, { rotate: day, problemIds: problems, situation }), readiness, situation)
     nav('/plan')
   }
 
