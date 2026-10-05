@@ -341,19 +341,19 @@ audioCues
 
 ## 4.1 Beckenboden-Modul
 
-- [ ] **Beckenboden-Wahrnehmung**
+- [x] **Beckenboden-Wahrnehmung** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
 
   **Erklärung:** Nicht nur Anspannung, sondern auch Wahrnehmung und Koordination sollen vermittelt werden.
 
-- [ ] **Anspannung und Entspannung**
+- [x] **Anspannung und Entspannung** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
 
   **Erklärung:** Die App soll nicht ausschließlich möglichst starke Kontraktion fördern.
 
-- [ ] **Atmung + Beckenboden**
+- [x] **Atmung + Beckenboden** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
 
   **Erklärung:** Atemmuster und Bewegung werden miteinander verbunden.
 
-- [ ] **Alltagssituationen**
+- [x] **Alltagssituationen** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
 
   - Husten
   - Niesen
@@ -362,7 +362,7 @@ audioCues
   - Aufstehen
   - Toilettengang
 
-- [ ] **Symptom-Tracking**
+- [x] **Symptom-Tracking** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
 
   Beispielsweise:
 
@@ -402,17 +402,17 @@ audioCues
 
 ## 5.2 Datenschutz
 
-- [ ] **Gesundheitsdaten ausschließlich lokal speichern**
+- [x] **Gesundheitsdaten ausschließlich lokal speichern** _(keine Netzwerkaufrufe im Code, CSP connect-src 'self')_
 
-- [ ] **Keine Gesundheitsdaten in URLs**
+- [x] **Keine Gesundheitsdaten in URLs** _(Routen enthalten nur Übungs-IDs; Zustand liegt im Speicher/IndexedDB)_
 
-- [ ] **Keine unnötigen Analytics**
+- [x] **Keine unnötigen Analytics** _(keine Tracker eingebunden)_
 
-- [ ] **Keine Pflicht zur Registrierung**
+- [x] **Keine Pflicht zur Registrierung**
 
-- [ ] **Lokale Daten löschen können**
+- [x] **Lokale Daten löschen können** _(Einstellungen, im Browser getestet)_
 
-- [ ] **Export/Import**
+- [x] **Export/Import** _(JSON-Export/-Import mit Validierung getestet; PDF folgt in Phase 16)_
 
   Beispiel:
 
@@ -479,22 +479,22 @@ Service Worker
 
 ## 7.1 Workout-Player
 
-- [ ] **Workout starten**
-- [ ] **Pause**
-- [ ] **Überspringen**
-- [ ] **Zurück**
-- [ ] **Fortschrittsanzeige**
-- [ ] **Übung wechseln**
+- [x] **Workout starten** _(Browser-E2E getestet)_
+- [x] **Pause** _(Browser-E2E getestet)_
+- [x] **Überspringen** _(Browser-E2E getestet)_
+- [x] **Zurück** _(implementiert, nicht im E2E getestet)_
+- [x] **Fortschrittsanzeige** _(Browser-E2E getestet)_
+- [x] **Übung wechseln** _(Browser-E2E getestet)_
 
 ---
 
 ## 7.2 Screen Wake Lock
 
-- [ ] **Display während des Workouts aktiv halten**
+- [ ] **Display während des Workouts aktiv halten** _(implementiert (useWakeLock), noch nicht auf echtem Gerät geprüft)_
 
   **Erklärung:** Das Smartphone soll sich während einer Übung nicht automatisch sperren.
 
-- [ ] **Fallback implementieren**
+- [ ] **Fallback implementieren** _(Hinweis bei fehlender Unterstützung implementiert, nicht geprüft)_
 
   **Erklärung:** Falls der Browser Wake Lock nicht unterstützt, muss die App trotzdem benutzbar bleiben.
 
@@ -502,7 +502,7 @@ Service Worker
 
 ## 7.3 Hands-Free Audio
 
-- [ ] **Audio-Cues**
+- [ ] **Audio-Cues** _(implementiert über Sprachausgabe des Geräts, nicht auf echtem Gerät geprüft)_
 
   Beispiele:
 
@@ -512,9 +512,9 @@ Service Worker
 
   > „Noch drei Wiederholungen.“
 
-- [ ] **Timer und Gongs**
-- [ ] **Vibration/Haptik optional**
-- [ ] **Screenless Mode**
+- [ ] **Timer und Gongs** _(implementiert (WebAudio), nicht auf echtem Gerät geprüft)_
+- [ ] **Vibration/Haptik optional** _(implementiert, nicht auf echtem Gerät geprüft)_
+- [ ] **Screenless Mode** _(implementiert, nicht auf echtem Gerät geprüft)_
 
   **Erklärung:** Die Nutzerin soll ein Workout möglichst vollständig durchführen können, ohne ständig auf das Smartphone zu schauen.
 
@@ -523,8 +523,8 @@ Service Worker
 ## 7.4 One-Thumb UX
 
 - [ ] **Alle Kernaktionen im unteren Bildschirmbereich**
-- [ ] **Touch Targets ausreichend groß**
-- [ ] **Keine wichtigen Funktionen ausschließlich über kleine Icons**
+- [x] **Touch Targets ausreichend groß** _(min. 48 px)_
+- [x] **Keine wichtigen Funktionen ausschließlich über kleine Icons** _(Navigation mit Labels)_
 
 ---
 
@@ -574,9 +574,9 @@ Red Flag
 
 ## 8.3 Post-Workout-Check
 
-- [ ] **Direkte Reaktion erfassen**
+- [x] **Direkte Reaktion erfassen** _(Browser-E2E getestet)_
 - [ ] **Reaktion am nächsten Tag berücksichtigen**
-- [ ] **Übungen automatisch regressieren**
+- [x] **Übungen automatisch regressieren** _(recommend() ersetzt Problem-Übungen der letzten 14 Tage, Unit-Test)_
 
 **Erklärung:** Nicht nur die absolvierte Einheit zählt, sondern auch die Reaktion des Körpers darauf.
 
@@ -606,7 +606,7 @@ Red Flag
 
 ## 9.2 Anti-Streak-System
 
-- [ ] **Keine Bestrafung bei Pausentagen**
+- [x] **Keine Bestrafung bei Pausentagen** _(keine Streaks in der App; Verlauf zählt nur Erledigtes)_
 
 Nicht:
 
@@ -643,7 +643,7 @@ Energie 5/5
 
 ## 10.1 Geburtsart
 
-- [ ] **Spontangeburt / Kaiserschnitt**
+- [x] **Spontangeburt / Kaiserschnitt** _(Onboarding + Eignungslogik, Unit-Tests)_
 
 **Erklärung:** Die Geburtsart ist ein Eingangssignal für die individuelle Trainingslogik, sollte aber nicht allein darüber entscheiden, was erlaubt ist.
 

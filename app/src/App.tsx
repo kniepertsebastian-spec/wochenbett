@@ -1,12 +1,45 @@
-function App() {
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Layout } from './app/Layout'
+import { SessionProvider } from './app/session'
+import { useProfile } from './hooks/useUserState'
+import { CheckInPage } from './pages/CheckIn'
+import { ExerciseDetailPage, LibraryPage } from './pages/Library'
+import { Onboarding } from './pages/Onboarding'
+import { PelvicFloorPage } from './pages/PelvicFloor'
+import { PlanPage } from './pages/Plan'
+import { ProgressPage } from './pages/Progress'
+import { SettingsPage } from './pages/Settings'
+import { TodayPage } from './pages/Today'
+import { WorkoutPage } from './pages/Workout'
+
+function Gate() {
+  const profile = useProfile()
+  if (profile === undefined) return null
+  if (profile === null) return <Onboarding />
   return (
-    <main className="pt-safe pb-safe pl-safe pr-safe mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
-      <h1 className="text-2xl font-semibold">Rückbildung</h1>
-      <p className="text-stone-600 dark:text-stone-400">
-        Sanft zurück zu Belastbarkeit und Wohlbefinden.
-      </p>
-    </main>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<TodayPage />} />
+        <Route path="check-in" element={<CheckInPage />} />
+        <Route path="plan" element={<PlanPage />} />
+        <Route path="workout" element={<WorkoutPage />} />
+        <Route path="library" element={<LibraryPage />} />
+        <Route path="library/:id" element={<ExerciseDetailPage />} />
+        <Route path="pelvic-floor" element={<PelvicFloorPage />} />
+        <Route path="progress" element={<ProgressPage />} />
+        <Route path="more" element={<SettingsPage />} />
+        <Route path="*" element={<TodayPage />} />
+      </Route>
+    </Routes>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <SessionProvider>
+        <Gate />
+      </SessionProvider>
+    </BrowserRouter>
+  )
+}

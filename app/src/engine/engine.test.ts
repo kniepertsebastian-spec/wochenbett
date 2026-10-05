@@ -60,6 +60,11 @@ describe('Safety: Red Flags & Ampel', () => {
     const r5 = recommend(vaginal, ok, exercises)
     expect(r5.kind).toBe('workout')
   })
+  it('Phase 1 + volle Energie → 10-Minuten-Recovery statt Mini-Einheit', () => {
+    const r = recommend({ ...vaginal, currentPhase: 1 }, ok, exercises)
+    expect(r.kind).toBe('recovery')
+    expect(r.kind === 'recovery' && r.exercises.length).toBeGreaterThan(2)
+  })
   it('Druckgefühl → keine automatische Progression', () => {
     const user = { ...vaginal }
     const r = recommend(user, { ...ok, pelvicPressure: true }, exercises)
@@ -95,6 +100,17 @@ describe('Safety: Eignung', () => {
   })
   it('Ohne Sicherheitsfelder wird nie angeboten (fail-closed)', () => {
     expect(isEligible({ ...byId('pelvic-tilt'), stopCriteria: [] }, vaginal, ok)).toBe(false)
+  })
+})
+
+describe('Progression (Empfehlung)', () => {
+  it('Problem-Übungen werden in der Empfehlung automatisch regressiert', () => {
+    const user = { ...vaginal, currentPhase: 3 as const }
+    const base = recommend(user, ok, exercises, 0)
+    const target = base.kind === 'workout' ? base.exercises.find((e) => e.regressions.length > 0) : undefined
+    expect(target).toBeDefined()
+    const r = recommend(user, ok, exercises, 0, [target!.id])
+    expect(r.kind === 'workout' && r.exercises.some((e) => e.id === target!.id)).toBe(false)
   })
 })
 

@@ -1,6 +1,7 @@
 import type { Exercise, Readiness, Recommendation, UserState } from '../domain/types'
 import { isEligible } from './eligibility'
 import { assessReadiness } from './readiness'
+import { applyRegressions } from './progression'
 import { highestUrgency } from './redflags'
 
 const TRANSITION_SEC = 15
@@ -25,7 +26,7 @@ function pickWithinBudget(candidates: Exercise[], budgetSec: number, rotate: num
  * Zentrale, reine Entscheidungsfunktion. Die UI entscheidet nie selbst über Freigaben.
  * `rotate` sorgt für Abwechslung (z. B. Tag des Jahres), das Ergebnis bleibt deterministisch.
  */
-export function recommend(user: UserState, readiness: Readiness, catalog: Exercise[], rotate = 0): Recommendation {
+export function recommend(user: UserState, readiness: Readiness, catalog: Exercise[], rotate = 0, problemIds: string[] = []): Recommendation {
   const assessment = assessReadiness(readiness)
   if (assessment.light === 'red') {
     return { kind: 'stop', light: 'red', reasons: assessment.redFlags, urgency: highestUrgency(assessment.redFlags) }
@@ -50,9 +51,19 @@ export function recommend(user: UserState, readiness: Readiness, catalog: Exerci
   const durationMin = readiness.energy === 4 ? 10 : 15
   // Aufwärmen mit Phase-1-Übung, danach Übungen der aktuellen/vorherigen Phase
   const main = eligible.filter((e) => e.phase > 1).sort((a, b) => b.phase - a.phase || a.difficulty - b.difficulty)
+  // In Phase 1 gibt es nur Recovery-Übungen: dann ein volles Recovery-Set statt einer Mini-"Einheit"
+  if (main.length === 0) return recovery(10)
   const warmup = recoveryPool.slice(0, 1)
-  const exercises = [...warmup, ...pickWithinBudget(main, durationMin * 60 - (warmup[0]?.duration ?? 0), rotate)]
+  // Übungen, bei denen zuletzt Probleme gemeldet wurden, werden automatisch durch leichtere Varianten ersetzt
+  const picked = [...warmup, ...pickWithinBudget(main, durationMin * 60 - (warmup[0]?.duration ?? 0), rotate)]
+  const exercises = applyRegressions(picked, problemIds, catalog, user, readiness)
   const allowProgression = readiness.pain === 'none' && !readiness.pelvicPressure && readiness.lastSession !== 'symptoms'
   if (exercises.length === 0) return recovery(5)
   return { kind: 'workout', light: 'green', durationMin, exercises, allowProgression }
+}
+
+/** Recovery-Set (2/5/10 Minuten) aus allen heute geeigneten Phase-1-Übungen. */
+export function buildRecoverySet(user: UserState, readiness: Readiness, catalog: Exercise[], minutes: 2 | 5 | 10, rotate = 0): Exercise[] {
+  const pool = catalog.filter((e) => e.phase === 1 && isEligible(e, user, readiness))
+  return pickWithinBudget(pool, minutes * 60, rotate)
 }
