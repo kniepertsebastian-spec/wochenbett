@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "e2e": "node e2e/flow.mjs && node e2e/offline.mjs && node e2e/features.mjs && node e2e/a11y.mjs",
+    "e2e": "node e2e/flow.mjs && node e2e/offline.mjs && node e2e/features.mjs && node e2e/audio.mjs && node e2e/touch.mjs && node e2e/a11y.mjs",
     "check": "tsc -b && oxlint && vitest run"
   },
   "dependencies": {

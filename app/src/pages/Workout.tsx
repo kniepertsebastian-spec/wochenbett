@@ -45,6 +45,7 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
   const current = list[idx]
   const [startedAt] = useState(() => Date.now())
   const spoken = useRef(-1)
+  const instructionsFor = useRef(-1)
 
   const mark = useCallback((id: string, o: Outcome) => setOutcomes((p) => ({ ...p, [id]: o })), [])
 
@@ -65,7 +66,15 @@ function Player({ initial, kind, durationMin, silent, readiness, user }: { initi
     audio.gong()
     const start = current.audioCues.find((c) => c.trigger === 'start')?.text ?? current.name
     audio.speak(settings.screenless ? `${current.name}. ${current.instructions.join(' ')}` : start)
+    instructionsFor.current = settings.screenless ? idx : -1
   }, [current, idx, running, audio, settings.screenless])
+
+  // Wechsel in den Screenless-Modus mitten in einer Übung: Anleitung nachholen
+  useEffect(() => {
+    if (!settings.screenless || !current || !running || instructionsFor.current === idx) return
+    instructionsFor.current = idx
+    audio.speak(`${current.name}. ${current.instructions.join(' ')}`)
+  }, [settings.screenless, current, idx, running, audio])
 
   useEffect(() => {
     if (!running) audio.stop()

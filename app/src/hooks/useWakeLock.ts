@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 /** Hält das Display wach, solange `active`. Fallback: unterstützt = false, App bleibt benutzbar. */
 export function useWakeLock(active: boolean) {
-  const supported = typeof navigator !== 'undefined' && 'wakeLock' in navigator
+  const supported = typeof navigator !== 'undefined' && !!navigator.wakeLock
   const [held, setHeld] = useState(false)
 
   useEffect(() => {

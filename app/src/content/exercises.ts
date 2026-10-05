@@ -65,7 +65,13 @@ function ex(s: Spec): Exercise {
     oneHandFriendly: false,
     domingWarning: false,
     stopCriteria: stop(),
-    audioCues: [cue('start', `${s.name}. Beginne ruhig.`), cue('end', 'Geschafft. Atme ruhig weiter.')],
+    // Standard-Cues: Start, Halbzeit, Ende; bei Wiederholungsübungen zusätzlich Atemrhythmus
+    audioCues: [
+      cue('start', `${s.name}. Beginne ruhig.`),
+      cue('halfway', 'Halbzeit.'),
+      ...(s.repetitions ? [cue('inhale', 'Einatmen.'), cue('exhale', 'Ausatmen und bewegen.')] : []),
+      cue('end', 'Geschafft. Atme ruhig weiter.'),
+    ],
     ...s,
     redFlags: flags,
     meta: draftMeta,

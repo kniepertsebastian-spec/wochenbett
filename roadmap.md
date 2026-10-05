@@ -446,7 +446,7 @@ audioCues
 
 - [ ] **Übungsbilder/GIFs/SVGs offline verfügbar** _(Cache-Regel /media/ (CacheFirst) vorbereitet; es gibt noch keine Medien)_
 
-- [ ] **Rezepte offline verfügbar** _(folgt mit Phase 12)_
+- [x] **Rezepte offline verfügbar** _(e2e/offline.mjs)_
 
 ---
 
@@ -490,11 +490,11 @@ Service Worker
 
 ## 7.2 Screen Wake Lock
 
-- [ ] **Display während des Workouts aktiv halten** _(implementiert (useWakeLock), noch nicht auf echtem Gerät geprüft)_
+- [x] **Display während des Workouts aktiv halten** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
 
   **Erklärung:** Das Smartphone soll sich während einer Übung nicht automatisch sperren.
 
-- [ ] **Fallback implementieren** _(Hinweis bei fehlender Unterstützung implementiert, nicht geprüft)_
+- [x] **Fallback implementieren** _(Hinweis und Bedienung ohne Wake Lock getestet)_
 
   **Erklärung:** Falls der Browser Wake Lock nicht unterstützt, muss die App trotzdem benutzbar bleiben.
 
@@ -502,7 +502,7 @@ Service Worker
 
 ## 7.3 Hands-Free Audio
 
-- [ ] **Audio-Cues** _(implementiert über Sprachausgabe des Geräts, nicht auf echtem Gerät geprüft)_
+- [x] **Audio-Cues** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen; Geräte-Sprachausgabe statt Audiodateien)_
 
   Beispiele:
 
@@ -512,9 +512,9 @@ Service Worker
 
   > „Noch drei Wiederholungen.“
 
-- [ ] **Timer und Gongs** _(implementiert (WebAudio), nicht auf echtem Gerät geprüft)_
-- [ ] **Vibration/Haptik optional** _(implementiert, nicht auf echtem Gerät geprüft)_
-- [ ] **Screenless Mode** _(implementiert, nicht auf echtem Gerät geprüft)_
+- [x] **Timer und Gongs** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
+- [x] **Vibration/Haptik optional** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
+- [x] **Screenless Mode** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
 
   **Erklärung:** Die Nutzerin soll ein Workout möglichst vollständig durchführen können, ohne ständig auf das Smartphone zu schauen.
 
@@ -575,7 +575,7 @@ Red Flag
 ## 8.3 Post-Workout-Check
 
 - [x] **Direkte Reaktion erfassen** _(Browser-E2E getestet)_
-- [ ] **Reaktion am nächsten Tag berücksichtigen**
+- [x] **Reaktion am nächsten Tag berücksichtigen** _(Folgetag-Reaktion wird gespeichert und hat Vorrang bei der Phasenfreigabe, Unit-Tests)_
 - [x] **Übungen automatisch regressieren** _(recommend() ersetzt Problem-Übungen der letzten 14 Tage, Unit-Test)_
 
 **Erklärung:** Nicht nur die absolvierte Einheit zählt, sondern auch die Reaktion des Körpers darauf.

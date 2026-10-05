@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Button, Card } from '../components'
 import { db } from '../db/db'
+import { effectiveReaction } from '../db/reactions'
 import { canAdvancePhase, SESSIONS_REQUIRED } from '../engine/progression'
 import type { Readiness } from '../domain/types'
 import { useUserState } from '../hooks/useUserState'
@@ -20,7 +21,7 @@ export function ProgressPage() {
 
   const sessions = data.workouts.filter((w) => w.kind === 'workout').length
   const recoveryDays = new Set(data.workouts.filter((w) => w.kind === 'recovery').map((w) => w.date.slice(0, 10))).size
-  const recent = data.workouts.map((w) => w.nextDayReaction ?? w.reaction)
+  const recent = data.workouts.map(effectiveReaction)
   const check = canAdvancePhase(user, data.lastCheck?.readiness ?? neutral, recent)
 
   async function advance() {

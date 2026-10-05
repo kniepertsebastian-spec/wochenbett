@@ -4,6 +4,7 @@ import { exercises } from '../content/exercises'
 import { Button, Card, CheckIn as Choice, WarningBanner } from '../components'
 import { useSession } from '../app/session'
 import { db } from '../db/db'
+import { recordNextDayReaction } from '../db/reactions'
 import type { LastSession, PainLevel, Readiness, RedFlagId, Situation } from '../domain/types'
 import { assessReadiness } from '../engine/readiness'
 import { RED_FLAGS, RED_FLAG_IDS } from '../engine/redflags'
@@ -37,10 +38,7 @@ export function CheckInPage() {
     const now = new Date().toISOString()
     await db.readinessChecks.add({ date: now, readiness, light })
     // Reaktion am Folgetag der letzten Einheit festhalten
-    const lastWorkout = await db.workoutHistory.orderBy('date').last()
-    if (lastWorkout?.id && lastWorkout.nextDayReaction === undefined && new Date(lastWorkout.date).toDateString() !== new Date().toDateString()) {
-      await db.workoutHistory.update(lastWorkout.id, { nextDayReaction: last })
-    }
+    await recordNextDayReaction(db, last)
     const day = Math.floor(Date.now() / 86_400_000)
     // Übungen mit gemeldeten Problemen in den letzten 14 Tagen
     const since = new Date(Date.now() - 14 * 86_400_000).toISOString()
