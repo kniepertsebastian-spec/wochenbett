@@ -1,6 +1,8 @@
 export { BottomNavigation } from './BottomNavigation'
 export type { NavItem } from './BottomNavigation'
 export { BackLink } from './BackLink'
+export { MonthCalendar } from './MonthCalendar'
+export type { DayMarker } from './MonthCalendar'
 export { Button } from './Button'
 export { Card } from './Card'
 export { CheckIn } from './CheckIn'

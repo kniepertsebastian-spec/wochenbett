@@ -59,11 +59,18 @@ export type AudioCue = {
   text: string
 }
 
+/** Trainingsmittel, die die Nutzerin besitzen kann. Übungen mit `requires` erscheinen nur, wenn alles vorhanden ist. */
+export type EquipmentId = 'chair' | 'gymball' | 'band' | 'weight'
+
+export type ExerciseMedia = { kind: 'image' | 'video'; src: string; alt: string }
+
 export type Exercise = {
   id: ExerciseId
   name: string
   description: string
   instructions: string[]
+  /** Warum diese Übung sinnvoll ist, in einfachen Worten (Entwurf, siehe meta). */
+  why: string
   breathing: string
   targetMuscles: string[]
   difficulty: 1 | 2 | 3 | 4 | 5
@@ -78,8 +85,13 @@ export type Exercise = {
   stopCriteria: StopCriterion[]
   redFlags: RedFlagId[]
   domingWarning: boolean
-  equipment: string[]
+  /** Benötigte Trainingsmittel (alle müssen vorhanden sein). */
+  requires: EquipmentId[]
   oneHandFriendly: boolean
+  /** Kann im Bett oder auf dem Sofa nebenbei gemacht werden (kurz, ohne Aufbau). */
+  bedFriendly: boolean
+  /** Optionale Abbildungen/Videos (liegen unter /media/ und werden offline gecacht). */
+  media?: ExerciseMedia[]
   audioCues: AudioCue[]
   meta: ContentMeta
 }
@@ -114,14 +126,16 @@ export type UserState = {
   currentPhase: PhaseId
   /** Beschwerden/Beobachtungen, die Übungen ausschließen können. */
   doming: boolean
+  equipment: EquipmentId[]
 }
 
 export type WorkoutReaction = 'good' | 'ok' | 'symptoms'
 
+/** `why`: nachvollziehbare Begründung, warum genau dieser Vorschlag entstanden ist. */
 export type Recommendation =
-  | { kind: 'stop'; light: 'red'; reasons: RedFlagId[]; urgency: Urgency }
-  | { kind: 'recovery'; light: 'yellow' | 'green'; durationMin: 2 | 5 | 10; exercises: Exercise[] }
-  | { kind: 'workout'; light: 'green'; durationMin: 5 | 10 | 15; exercises: Exercise[]; allowProgression: boolean }
+  | { kind: 'stop'; light: 'red'; reasons: RedFlagId[]; urgency: Urgency; why: string[] }
+  | { kind: 'recovery'; light: 'yellow' | 'green'; durationMin: 2 | 5 | 10; exercises: Exercise[]; why: string[] }
+  | { kind: 'workout'; light: 'green'; durationMin: 5 | 10 | 15; exercises: Exercise[]; allowProgression: boolean; why: string[] }
 
 /** Alltagssituation mit Baby (Phase 11). Ersetzt nie den Check-in. */
 export type Situation = 'baby_sleeping' | 'baby_arm' | 'one_hand' | 'exhausted' | 'five_min'

@@ -44,6 +44,11 @@ docker compose up -d --build                 # http://127.0.0.1:18080
 docker compose --profile tunnel up -d --build  # zusätzlich Cloudflare Tunnel (TUNNEL_TOKEN in .env)
 ```
 
+## Inhalte erweitern
+
+- Übungen: `app/src/content/exercises.ts` (jede Übung braucht Erklärung `why`, Sicherheitsangaben, Regression; `bedFriendly` für Bett-Übungen, `requires` für Trainingsmittel, optional `media`). `npm run check` prüft Vollständigkeit.
+- Bilder/Videos: Dateien unter `app/public/media/` ablegen und in `media` der Übung eintragen. Sie werden vom Service Worker offline gecacht.
+
 ## Datenschutz
 
 Alle Gesundheitsdaten bleiben lokal im Browser (IndexedDB). Keine Registrierung, keine Analytics, keine Daten in URLs. Export/Import/Löschen unter *Mehr → Einstellungen*. Die Seite ist per `robots.txt`/`noindex` von Suchmaschinen ausgeschlossen.

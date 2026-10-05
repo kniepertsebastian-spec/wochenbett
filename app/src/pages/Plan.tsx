@@ -23,6 +23,15 @@ export function PlanPage() {
         <p className="text-stone-600 dark:text-stone-400">
           Die App kann nicht beurteilen, was dahintersteckt. Bitte lass es von einer Fachperson abklären. Training ist erst wieder sinnvoll, wenn das geklärt ist.
         </p>
+
+        <details className="rounded-2xl border border-stone-200 p-3 dark:border-stone-800">
+        <summary className="min-h-10 cursor-pointer font-medium">Warum dieser Vorschlag?</summary>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          {r.why.map((w) => (
+            <li key={w}>{w}</li>
+          ))}
+        </ul>
+        </details>
         <Link to="/" className="block min-h-12 rounded-2xl bg-stone-200 px-5 py-3 text-center dark:bg-stone-800">
           Zurück
         </Link>
@@ -44,6 +53,15 @@ export function PlanPage() {
       {r.kind === 'workout' && !r.allowProgression && (
         <Card>Heute bleibt es bei vertrauten Übungen, ohne Steigerung.</Card>
       )}
+
+      <details className="rounded-2xl border border-stone-200 p-3 dark:border-stone-800">
+        <summary className="min-h-10 cursor-pointer font-medium">Warum dieser Vorschlag?</summary>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          {r.why.map((w) => (
+            <li key={w}>{w}</li>
+          ))}
+        </ul>
+      </details>
       <div className="space-y-3">
         {r.exercises.map((e) => (
           <ExerciseCard key={e.id} name={e.name} description={e.description} meta={`${Math.round(e.duration / 60)} Min${e.repetitions ? ` · ${e.repetitions} Wdh.` : ''}`} oneHandFriendly={e.oneHandFriendly} />

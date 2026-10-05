@@ -59,3 +59,28 @@ export function canAdvancePhase(user: UserState, readiness: Readiness, recent: W
   else if (last.some((r) => r === 'symptoms')) reasons.push('Beschwerden nach einer der letzten Einheiten')
   return { allowed: reasons.length === 0, reasons }
 }
+
+// ---------- Startphase ----------
+
+export type ActivityLevel = 'none' | 'light' | 'course'
+
+/**
+ * Vorschlag für die Startphase aus Zeit seit Geburt UND bisheriger Aktivität. Zeit allein genügt nie:
+ * Wer noch nichts gemacht hat, beginnt in Phase 1. Phase 4 braucht immer medizinische Freigabe und wird nie vorgeschlagen.
+ */
+export function suggestStartPhase(daysSinceBirth: number, level: ActivityLevel): PhaseId {
+  if (level === 'none') return 1
+  const cap: PhaseId = level === 'course' ? 3 : 2
+  let phase: PhaseId = 1
+  for (const p of [2, 3] as PhaseId[]) if (p <= cap && daysSinceBirth >= PHASE_MIN_DAYS[p]) phase = p
+  return phase
+}
+
+/** Höchste Phase, die die Nutzerin selbst festlegen darf (Zeit-Untergrenze und Freigabe müssen passen). */
+export function maxSelectablePhase(daysSinceBirth: number, medicalClearance: boolean): PhaseId {
+  let phase: PhaseId = 1
+  for (const p of [2, 3, 4] as PhaseId[]) {
+    if (daysSinceBirth >= PHASE_MIN_DAYS[p] && (!PHASE_REQUIRES_CLEARANCE[p] || medicalClearance)) phase = p
+  }
+  return phase
+}

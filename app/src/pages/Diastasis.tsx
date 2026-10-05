@@ -73,7 +73,7 @@ export function DiastasisPage() {
         <CheckIn legend="Wölbung (Doming) beobachtet?" options={[{ value: 'no', label: 'nein' }, { value: 'yes', label: 'ja' }]} value={doming} onChange={setDoming} />
         <label className="block">
           <span className="mb-1 block">Notiz (optional)</span>
-          <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} className="w-full rounded-xl border border-stone-300 bg-transparent p-3 dark:border-stone-700" />
+          <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} className="w-full rounded-xl border border-stone-300 p-3 dark:border-stone-700" />
         </label>
         <Button disabled={width === null || !doming} onClick={save}>Eintragen</Button>
         {saved && <p role="status">Gespeichert. Nur auf deinem Gerät.</p>}

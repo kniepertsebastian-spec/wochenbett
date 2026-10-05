@@ -23,6 +23,15 @@
   html {
     -webkit-text-size-adjust: 100%;
   }
+  /* Formularfelder und Auswahllisten: Hintergrund und Text immer passend, auch in der aufklappenden Liste (Dunkelmodus) */
+  select,
+  textarea,
+  input:not([type='checkbox']):not([type='radio']):not([type='file']) {
+    @apply bg-white text-stone-900 dark:bg-stone-900 dark:text-stone-100;
+  }
+  option {
+    @apply bg-white text-stone-900 dark:bg-stone-900 dark:text-stone-100;
+  }
   body {
     @apply bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100;
     min-height: 100dvh;
