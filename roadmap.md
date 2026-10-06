@@ -1,1238 +1,251 @@
-# Postpartum Rückbildungs-PWA – Roadmap
+# Wochenbett – Produkt- & UX-Roadmap
 
-## Ziel der Anwendung
+> Ältere, technische Roadmap (Aufbau der PWA): [`docs/roadmap-archiv-v1.md`](docs/roadmap-archiv-v1.md)
 
-Die Anwendung soll Frauen nach der Geburt dabei unterstützen, schrittweise wieder Bewegung, Körperwahrnehmung und Alltagsbelastbarkeit aufzubauen.
+**Ziel:** Die App soll sich wie ein ruhiger, sicherer Begleiter durch die erste Zeit nach der Geburt anfühlen, nicht wie ein Trainingsprogramm, das zusätzliche Entscheidungen verlangt.
 
-Die App ist **keine Diagnostik- oder Therapie-App**. Sie soll Übungen, Alltagstipps, Ernährungsideen und Recovery-Angebote bereitstellen und gleichzeitig erkennen, wann eine Nutzerin eine Pause machen oder medizinische bzw. therapeutische Unterstützung suchen sollte.
+**Priorisierung:** P0 = kritisch / zuerst, P1 = hoher Produktnutzen, P2 = sinnvoller Ausbau, P3 = später. Die Roadmap ist bewusst auf Vereinfachung, Sicherheit und Alltagstauglichkeit ausgerichtet.
 
-Grundprinzip:
-
-> **Nicht „mehr Training“ ist das Ziel, sondern eine sichere und nachhaltige Rückkehr zu Belastbarkeit und Wohlbefinden.**
-
-Die Empfehlungen sollten sich daher nicht ausschließlich an der Anzahl der Wochen seit der Geburt orientieren. Die WHO empfiehlt für die Zeit nach der Geburt einen schrittweisen Aufbau von Bewegung und weist insbesondere bei Komplikationen und nach Kaiserschnitt auf die Notwendigkeit individueller medizinischer Beratung hin.
+Abgehakt ist nur, was umgesetzt **und** geprüft wurde. Hinweise zu Grenzen stehen am Punkt.
 
 ---
 
-# Phase 0 – Medical Safety, Konzept & fachliche Grundlage
+## 1. Produktvision
 
-Diese Phase kommt bewusst **vor die technische Implementierung**.
+Kernversprechen: **„Dein sanfter Begleiter für Bewegung und Erholung nach der Geburt.“**
 
-Die App bewegt sich im Gesundheitsbereich. Deshalb sollte zuerst definiert werden, welche Empfehlungen die App überhaupt geben darf und wann sie keine Empfehlung geben sollte.
+- Die Startseite beantwortet sofort: Was ist heute sinnvoll?
+- Die Nutzerin muss möglichst wenig nachdenken und auswählen.
+- Ruhe und Regeneration werden genauso positiv behandelt wie Bewegung.
+- Empfehlungen werden verständlich erklärt, ohne Diagnosen vorzugeben.
+- Sicherheitsgrenzen sind sichtbar, klar und professionell formuliert.
 
-## 0.1 Medizinisches Sicherheitskonzept
+## 2. Roadmap auf einen Blick
 
-- [ ] **Red-Flag-System definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
-  - ungewöhnlich starke oder zunehmende Blutung
-  - Fieber
-  - zunehmender starker Schmerz
-  - auffällige Probleme an einer Kaiserschnitt- oder Geburtsverletzungsstelle
-  - Atemnot oder Brustschmerzen
-  - einseitige Schwellung bzw. starke Schmerzen im Bein
-  - ausgeprägtes Druck- oder Fremdkörpergefühl im Becken
-  - neue oder deutliche Verschlechterung von Beschwerden
-
-  **Erklärung:** Red Flags sind Situationen, bei denen die App nicht einfach eine leichtere Übung anbieten sollte. Stattdessen soll sie das Training stoppen und auf medizinische Abklärung hinweisen. Die konkrete Definition sollte fachlich geprüft werden.
-
-- [ ] **Eskalationslogik definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
-
-  ```text
-  Grün:
-  normale Tagesform
-      ↓
-  normales Training
-
-  Gelb:
-  leichte Beschwerden / starke Erschöpfung
-      ↓
-  Recovery oder leichtere Variante
-
-  Rot:
-  Red Flag
-      ↓
-  Training abbrechen
-      ↓
-  medizinische Abklärung empfehlen
-  ```
-
-  **Erklärung:** Die App benötigt unterschiedliche Reaktionen auf unterschiedliche Belastungszustände.
-
-- [ ] **Keine Diagnosen durch die App** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
-
-  **Erklärung:** Die App darf beispielsweise nicht behaupten, dass eine Nutzerin eine Rektusdiastase oder andere Erkrankung hat. Sie darf nur Beobachtungen dokumentieren und auf mögliche Abklärungen hinweisen.
-
-- [ ] **Kontraindikationen pro Übung definieren** _(Entwurf liegt vor: docs/safety-concept.md, noch nicht geprüft)_
-
-  **Erklärung:** Jede Übung erhält Sicherheitsinformationen, Abbruchkriterien sowie mögliche Regressionen.
+| Phase | Zeitraum | Ziel | Priorität |
+|-------|----------|------|-----------|
+| Phase 0 | Woche 1 | Sicherheit, UX-Basis und Produktfokus | P0 |
+| Phase 1 | Woche 2–3 | Heute + Check-in radikal vereinfachen | P0 |
+| Phase 2 | Woche 4–6 | Personalisierte Mikro-Einheiten & Workout-UX | P0/P1 |
+| Phase 3 | Woche 7–9 | Symptom-/Wissensbereich & mentale Erholung | P1 |
+| Phase 4 | Woche 10–12 | Fortschritt, Ziele und Inhalte professionalisieren | P1/P2 |
+| Phase 5 | danach | Sync, Daten, Qualität, Wachstum | P2/P3 |
 
 ---
 
-## 0.2 Medizinische Review-Struktur
+## 3. Phase 0 – Sicherheit & Fundament
 
-- [ ] **Jeden medizinisch relevanten Content mit Quelle versehen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
+Ziel: Bevor neue Features hinzukommen, muss klar sein, was die App verspricht und wo ihre Grenzen liegen.
 
-  **Erklärung:** Übungen, Red Flags, Beckenbodeninformationen und Ernährungsempfehlungen sollten nachvollziehbar sein.
+### P0 – Produktfokus
 
-- [ ] **Review-Datum hinterlegen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
+- [x] Kernnavigation auf den Hauptpfad konzentrieren: Heute → Check-in → Empfehlung → Workout/Erholung. _(vier Tabs (Heute, Übungen, Mein Weg, Mehr); Check-in und Empfehlung direkt auf Heute, im Browser getestet)_
+- [x] Alles, was nicht direkt Bewegung, Erholung oder Orientierung unterstützt, nachrangig behandeln. _(Rezepte, Ernährung, Termine, Export und Daten unter Mehr; auf Heute stehen sie unterhalb der Empfehlung)_
+- [x] Keine zusätzlichen Gamification-Features wie Streaks, Punkte oder Kalorienziele einführen. _(per Test geprüft: keine Streaks, Punkte, Kalorien)_
+- [x] „Mehr“ als sekundären Bereich beibehalten, aber Inhalte klar gruppieren. _(fünf Gruppen nach Lebenssituation, getestet)_
 
-  Beispiel:
+### P0 – Medizinische Sicherheit
 
-  ```json
-  {
-    "reviewedAt": "2026-10-01",
-    "reviewDue": "2027-10-01"
-  }
-  ```
+- [ ] Red-Flag-Texte fachlich prüfen lassen. _(manuell: Hebamme/Ärztin; Entwurf und Prüffelder liegen vor)_
+- [x] Klare Unterscheidung zwischen: beobachten, Hebamme/Ärztin kontaktieren, dringend abklären. _(drei Stufen in „Ist das normal?“ und bei Warnzeichen (Beobachten / kontaktieren / dringend), getestet)_
+- [x] Für wichtige Inhalte Quelle, fachliche Rolle des Reviewers, Prüfdatum und Aktualisierungsstatus hinterlegen. _(Felder, Anzeige an den Inhalten und Seite „Inhalte und Prüfstatus“ umgesetzt; alle Inhalte sind noch Entwurf ohne Prüfer)_
+- [x] Keine Diagnose- oder Therapieaussagen; Empfehlungen als Orientierung formulieren. _(Orientierungstexte mit Hinweis, Test gegen Befundsprache; Inhalte ungeprüft)_
+- [x] Bei Warnsignalen immer einen eindeutigen nächsten Schritt anbieten. _(Kontakt-, Bereitschaftsdienst- oder Notruf-Schritt mit Anruf-Link, getestet)_
 
-- [ ] **Evidence-Level einführen** _(Entwurf liegt vor: docs/content-governance.md, noch nicht geprüft)_
+## 4. Phase 1 – „Heute“ neu denken
 
-  ```text
-  strong
-  moderate
-  limited
-  practical_tip
-  ```
+Ziel: Die Nutzerin soll innerhalb weniger Sekunden verstehen, was heute möglich ist.
 
-  **Erklärung:** Damit lässt sich unterscheiden zwischen gut belegten Empfehlungen und eher praktischen Alltagstipps.
+### Neue Startseite
 
-- [ ] **Fachliche Prüfung organisieren** _(Checkliste: docs/content-governance.md §4, manuell)_
+- [x] Header: „Heute“ + Woche nach Geburt.
+- [x] Primäre Frage: „Wie geht es dir heute?“
+- [x] Mini-Check-in statt Fragebogen. _(drei Fingertipps)_
+- [x] Danach direkt eine Empfehlung: Bewegung, kurze Übung, Erholung oder professionelle Abklärung. _(direkt auf Heute, ohne Seitenwechsel)_
+- [x] Kontext-Auswahl „Was ist gerade möglich?“ prominent platzieren. _(direkt in der Empfehlungskarte, wirkt sofort)_
 
-  **Erklärung:** Vor einer ernsthaften Nutzung sollten die medizinischen Inhalte idealerweise durch Hebamme, Physiotherapeutin mit Schwerpunkt Beckenboden/Rückbildung und ggf. Gynäkologin geprüft werden.
+### Kontext „Was ist gerade möglich?“
 
----
+- [x] Baby schläft _(leise, ohne Ansagen und Gong, getestet)_
+- [x] Baby auf dem Arm _(nur Einhand-Übungen, getestet)_
+- [x] Eine Hand frei _(nur Einhand-Übungen)_
+- [x] Ich habe 5 Minuten _(kurze Einheit)_
+- [x] Ich bin komplett erschöpft _(kürzeste Erholung)_
+- [x] Ich habe 10–20 Minuten und möchte etwas tun _(längere Einheit bei guter Energie, bei wenig Energie bleibt es sanft)_
 
-## 0.3 Grundprinzip der Trainingslogik
+### P0 – Mini-Check-in
 
-- [ ] **Zeit seit Geburt nicht als alleinige Freigabe verwenden** _(Entwurf liegt vor: docs/training-logic.md, noch nicht geprüft)_
+- [x] Schritt 1: Energie 1–5.
+- [x] Schritt 2: „Ist heute etwas anders oder auffällig?“ Ja/Nein.
+- [x] Nur bei Ja: Schmerzen, Druckgefühl, Beschwerden und Red Flags vertiefen.
+- [x] Letzte Einheit kurz bewerten: gut / okay / Beschwerden. _(wird nur gefragt, wenn es eine frühere Einheit gibt)_
+- [x] Ziel: ca. 10–15 Sekunden für einen normalen Check-in. _(per Test: 2 bis 3 Fingertipps; echte Zeit per Nutzertest zu bestätigen)_
 
-  Nicht:
+## 5. Phase 2 – Empfehlungen & Workout
 
-  ```text
-  Woche 6 = automatisch nächste Phase
-  ```
+Ziel: Die App soll nicht nur eine Einheit zeigen, sondern erklären, warum sie gerade passt.
 
-  Sondern:
+### Empfehlungskarte
 
-  ```text
-  Zeit seit Geburt
-  +
-  Geburtsart
-  +
-  Beschwerden
-  +
-  bisherige Belastbarkeit
-  +
-  ggf. medizinische Freigabe
-  =
-  heutige Trainingsoptionen
-  ```
+- [x] Klare Überschrift, z. B. „Heute passt eine sanfte 8-Minuten-Einheit.“ _(Dauer aus den gewählten Übungen berechnet)_
+- [x] Darunter 1–2 verständliche Gründe: „Du hast wenig Energie“ / „Die letzte Einheit wurde gut vertragen“. _(höchstens zwei Gründe)_
+- [x] Optional: „Warum?“ als aufklappbare Erklärung.
+- [x] Alternative anbieten: „Heute nur 3 Minuten?“ oder „Heute lieber Erholung?“ _(höchstens zwei Alternativen)_
 
-- [ ] **Readiness-System definieren** _(Entwurf liegt vor: docs/training-logic.md, noch nicht geprüft)_
+### Workout UX
 
-  **Erklärung:** Vor dem Training werden Tagesform, Energie, Beschwerden und Reaktion auf die letzte Einheit abgefragt.
+- [x] „Übung wechseln“ und „Beschwerden“ nicht in einem Button kombinieren.
+- [x] Separate Aktionen: „Leichtere Variante“, „Pause“, „Training beenden“, „Etwas stimmt nicht“. _(vier getrennte Knöpfe)_
+- [x] Vor jeder Übung kurz erklären, worauf die Nutzerin achten soll. _(„Worauf du achten sollst“ für alle 33 Übungen (Entwurf))_
+- [x] Bei Warnzeichen sofortige, ruhige Handlungsanweisung. _(Stopp, ruhige Ansage und Anweisung auf Heute, getestet)_
+- [x] Nach dem Training: „Wie fühlt sich dein Körper jetzt an?“ statt nur Leistungsbewertung.
+- [x] „Heute reicht das“ als positive Abschlussoption. _(auch beim vorzeitigen Beenden)_
 
-  Beispiel:
+## 6. Phase 3 – Fehlende Inhalte ergänzen
 
-  ```text
-  🟢 Heute normal
-  🟡 Heute sanfter
-  🔴 Heute kein Workout
-  ```
+Ziel: Die App soll auch dann hilfreich sein, wenn die Nutzerin nicht trainieren möchte oder unsicher wegen eines Symptoms ist.
 
----
+### P1 – „Ist das normal?“
 
-# Phase 1 – Projektgrundgerüst & technische Basis
+Themen:
 
-## 1.1 Frontend-Projekt initialisieren
+- [x] Wochenfluss / Blutungen _(Entwurf, ungeprüft)_
+- [x] Schmerzen und Wundgefühl _(Entwurf, ungeprüft)_
+- [x] Beckenboden und Druckgefühl _(Entwurf, ungeprüft)_
+- [x] Bauch / Diastase / Spannungsgefühl _(Entwurf, ungeprüft)_
+- [x] Kaiserschnittnarbe bzw. Geburtsverletzungen _(Entwurf, ungeprüft)_
+- [x] Rücken- und Nackenbeschwerden _(Entwurf, ungeprüft)_
+- [x] Brüste / Stillen _(Entwurf, ungeprüft)_
+- [x] Müdigkeit und Erschöpfung _(Entwurf, ungeprüft)_
+- [x] Verdauung und Wasserlassen _(Entwurf, ungeprüft)_
+- [x] Schwindel / Kreislauf _(Entwurf, ungeprüft)_
+- [x] Stimmung und emotionale Belastung _(Entwurf, ungeprüft)_
 
-- [x] **Vite + React + TypeScript aufsetzen** _(in `app/`, Build + Typecheck geprüft)_
+Muster und Haltung:
 
-  **Erklärung:** Vite übernimmt Development und Build-Prozess. React bildet die UI-Komponenten. TypeScript sorgt für typisierte Datenmodelle.
+- [x] Jedes Thema nach demselben Muster: Was kann vorkommen? Was beobachten? Wann professionelle Hilfe? Wann dringend? _(per Test für alle 11 Themen)_
+- [x] Nicht als Diagnose-Tool gestalten, sondern als Orientierung und Entscheidungshilfe. _(Hinweise und Test gegen Befundsprache; Inhalte ungeprüft)_
 
-- [x] **Tailwind CSS integrieren** _(Tailwind v4 via Vite-Plugin; Safe-Area-Utilities, Dark Mode, Reduced Motion; Build + Lint geprüft)_
+### P1 – Mentales Wohlbefinden
 
-  **Erklärung:** Für schnelles Erstellen eines mobilen UI-Systems mit Safe Areas, Dark Mode, Accessibility und konsistenten Abständen.
+- [x] Kurzer optionaler Tagescheck: „Wie fühlst du dich heute?“ _(fünf Stufen, freiwillig)_
+- [x] Gefühle normalisieren, ohne zu diagnostizieren. _(Seite „Wohlbefinden“ (Entwurf, ungeprüft))_
+- [x] Hinweise auf Unterstützung durch Partner, Familie, Hebamme, Ärztin oder andere Vertrauenspersonen.
+- [x] Bei auffälligen Antworten keine automatisierte Diagnose, sondern klarer Hinweis auf professionelle Unterstützung. _(bei drei schweren Tagen in Folge und jederzeit mit Notruf und Telefonseelsorge erreichbar, getestet)_
 
-- [x] **UI-Grundsystem definieren** _(9 Komponenten in `app/src/components/`; Lint, Typecheck, Browser-Smoketest geprüft)_
+## 7. Phase 4 – Fortschritt & Personalisierung
 
-  Wiederverwendbare Komponenten:
+### P1 – Persönliche Ziele
 
-  ```text
-  Button
-  Card
-  BottomNavigation
-  ProgressBar
-  ExerciseCard
-  Timer
-  Modal
-  WarningBanner
-  CheckIn
-  ```
+- [x] Beckenboden besser wahrnehmen _(sortiert Beckenboden-Übungen nach vorn)_
+- [x] Rumpf/Core sanft stärken _(sortiert Rumpf-Übungen nach vorn)_
+- [x] Rücken entlasten _(sortiert Rücken- und Nacken-Übungen nach vorn)_
+- [x] Beweglichkeit verbessern _(sortiert Mobilisation nach vorn)_
+- [x] Mehr Energie im Alltag _(sortiert Atmung und Alltagskraft nach vorn)_
+- [x] Sicherheit und Vertrauen in den eigenen Körper _(sortiert leichte, vertraute Übungen nach vorn)_
+- [x] Einfach wieder regelmäßig etwas für mich tun _(sortiert kurze Übungen nach vorn)_
 
----
+### P1 – „Mein Weg“ statt Leistungsdashboard
 
-# Phase 2 – PWA & Docker-Infrastruktur
+- [x] Fortschritt als Entwicklung erzählen, nicht als Wettbewerb. _(Seite „Mein Weg“)_
+- [x] Beispiele: Anzahl absolvierte Einheiten, Verträglichkeit, Bewegungsvielfalt, persönliche Meilensteine.
+- [x] Keine Gewichtskurven oder Kalorien als zentrale Erfolgsmetriken. _(per Test geprüft)_
+- [x] Streaks vermeiden, besonders im Wochenbett darf eine Pause ein Erfolg sein. _(„bewusst ausgeruht“ zählt als Erfolg)_
 
-## 2.1 PWA einrichten
+## 8. Phase 5 – Inhalte, Daten & Ausbau
 
-- [x] **vite-plugin-pwa integrieren** _(Service Worker per generateSW, Offline-Reload getestet)_
+### P2 – Inhalte
 
-  **Erklärung:** Damit wird die Webanwendung installierbar und kann Offline-Funktionen nutzen.
+- [x] Tipps und Wochen-Orientierung in kurze, konkrete Karten umwandeln. _(„Diese Woche“ mit konkreten Schritten für heute; Tipps als Karten)_
+- [x] Inhalte nach Lebenssituation statt nur nach Themen sortieren. _(Mehr gruppiert nach „Ich bin unsicher“, „Ich brauche Ruhe“ usw.)_
+- [x] Rezepte und Ernährung als Unterstützung, nicht als zweites Hauptprodukt. _(nur unter Mehr, nicht in der Kernnavigation)_
+- [ ] Termine und Export erst ausbauen, wenn der Kernpfad stabil ist. _(bewusst zurückgestellt, nicht ausgebaut)_
 
-- [x] **Web App Manifest konfigurieren** _(vite.config.ts)_
+### P2 – Sync & Daten
 
-  ```text
-  name
-  short_name
-  description
-  icons
-  theme_color
-  background_color
-  display: standalone
-  ```
-
-- [x] **Maskable Icons erstellen** _(app/public/icons, aus SVG-Platzhalter generiert; Design ggf. ersetzen)_
-
-  **Erklärung:** Sorgt für korrekte App-Icons auf unterschiedlichen Plattformen.
-
-- [x] **iOS-spezifische PWA-Anpassungen** _(Meta-Tags, apple-touch-icon, viewport-fit, Safe Areas; keine eigenen Startbilder; auf echtem iPhone noch ungetestet)_
-
-  - `viewport-fit=cover`
-  - Safe Areas
-  - Statusbar-Verhalten
-  - Homescreen-Icon
-  - Splashscreen-Verhalten
-
----
-
-## 2.2 Docker-Containerisierung
-
-- [x] **Multi-Stage-Dockerfile** _(app/Dockerfile; Docker-Build in dieser Umgebung nicht ausführbar, nicht gebaut)_
-
-  ```text
-  Node
-  ↓
-  npm install
-  ↓
-  npm run build
-  ↓
-  Nginx Alpine
-  ↓
-  fertige statische Dateien
-  ```
-
-  **Erklärung:** Der Produktionscontainer bleibt dadurch klein und enthält nur die für den Betrieb benötigten Dateien.
-
-- [x] **Nginx konfigurieren** _(mit nginx -t und curl getestet)_
-
-  ```nginx
-  try_files $uri $uri/ /index.html;
-  ```
-
-  **Erklärung:** Dadurch funktionieren SPA-Routen auch beim direkten Aufruf.
-
-- [x] **Caching-Regeln definieren** _(getestet, siehe docs/deployment.md)_
-
-  **Erklärung:** Statische Assets können lange gecacht werden. Service Worker und Manifest müssen dagegen kontrolliert aktualisiert werden.
-
-- [x] **docker-compose.yml** _(Konfig validiert, nicht gestartet)_
-
-  **Erklärung:** Ermöglicht einfachen lokalen Betrieb und späteres Deployment auf NAS oder Server.
+- [x] Transparente Erklärung: Was wird gespeichert? Was wird synchronisiert? Was bleibt lokal? _(Seite „Deine Daten“)_
+- [x] Export und Löschung leicht auffindbar machen. _(Mehr → Deine Daten, auch aus den Einstellungen verlinkt)_
+- [x] Offline-Nutzung für den wichtigsten Kernpfad sicherstellen, soweit technisch möglich. _(Heute → Check-in → Empfehlung → Workout im Flugmodus getestet)_
+- [x] Fehler beim Sync verständlich und handlungsorientiert erklären. _(Ursache und nächster Schritt je Fehlerklasse, getestet)_
 
 ---
 
-## 2.3 HTTPS-Infrastruktur
-
-- [ ] **HTTPS bereitstellen** _(Cloudflare-Tunnel-Setup vorbereitet: docs/deployment.md; offen bis du ihn mit deiner Domain/Token einrichtest)_
-
-  Mögliche Lösungen:
-
-  - Caddy
-  - Traefik
-  - Nginx Proxy Manager
-  - Cloudflare Tunnel
-
-- [ ] **PWA auf echtem Smartphone testen**
-
-  **Erklärung:** Viele PWA-, Audio-, Wake-Lock- und Installationsfunktionen müssen auf einem echten Gerät getestet werden.
-
----
-
-# Phase 3 – Datenbasis & Content-Pipeline
-
-## 3.1 Übungs-Datensatz
-
-- [ ] **Bestehendes Fitness-Repo bereinigen** _(offen: das Repo liegt nicht vor, Katalog wurde stattdessen neu kuratiert; bitte Repo-Link nennen)_
-
-  Zunächst ungeeignete Übungen entfernen, beispielsweise:
-
-  - Crunches
-  - Full Planks
-  - Leg Raises
-  - Jumps
-  - hochintensive Übungen
-
-  **Erklärung:** Die konkrete Freigabe einzelner Übungen sollte fachlich geprüft werden.
-
-- [x] **20–25 Basisübungen kuratieren** _(33 Übungen (inkl. 14 Bett-Übungen und 4 mit Ball/Band) in app/src/content/exercises.ts; Entwurf, fachlich ungeprüft)_
-
-  Beispielsweise:
-
-  - Glute Bridge
-  - Clamshell
-  - Bird Dog
-  - Pelvic Tilt
-  - sanfte Dead-Bug-Varianten
-  - Mobilisationsübungen
-  - Atem-/Koordinationsübungen
-
----
-
-## 3.2 Übungen als strukturierte Daten modellieren
-
-Jede Übung erhält beispielsweise:
+## 9. Konkreter Ziel-Flow
 
 ```text
-id
-name
-description
-instructions
-breathing
-targetMuscles
-difficulty
-duration
-repetitions
-phase
-regressions
-progressions
-contraindications
-redFlags
-domingWarning
-equipment
-oneHandFriendly
-audioCues
-```
-
-**Erklärung:** Dadurch kann die App später automatisch passende Übungen auswählen und anhand von Nutzerzustand und Sicherheitslogik filtern.
-
----
-
-## 3.3 Übungs-Progressionen
-
-- [x] **Regression → Basis → Progression modellieren** _(regressions/progressions + Validierung der Referenzen, getestet)_
-
-  Beispiel:
-
-  ```text
-  Pelvic Tilt
-      ↓
-  Glute Bridge
-      ↓
-  Marching Bridge
-  ```
-
-- [x] **Automatische Regression ermöglichen** _(engine/progression.ts, getestet)_
-
-  **Erklärung:** Wenn die Nutzerin bei einer Übung Probleme meldet, kann automatisch eine leichtere Variante angeboten werden.
-
----
-
-# Phase 4 – Beckenboden & Körperwahrnehmung
-
-## 4.1 Beckenboden-Modul
-
-- [x] **Beckenboden-Wahrnehmung** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
-
-  **Erklärung:** Nicht nur Anspannung, sondern auch Wahrnehmung und Koordination sollen vermittelt werden.
-
-- [x] **Anspannung und Entspannung** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
-
-  **Erklärung:** Die App soll nicht ausschließlich möglichst starke Kontraktion fördern.
-
-- [x] **Atmung + Beckenboden** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
-
-  **Erklärung:** Atemmuster und Bewegung werden miteinander verbunden.
-
-- [x] **Alltagssituationen** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
-
-  - Husten
-  - Niesen
-  - Lachen
-  - Heben
-  - Aufstehen
-  - Toilettengang
-
-- [x] **Symptom-Tracking** _(app/src/pages/PelvicFloor.tsx; Inhalte Entwurf, fachlich ungeprüft)_
-
-  Beispielsweise:
-
-  - Urinverlust
-  - Druckgefühl
-  - Schweregefühl
-  - Schmerzen
-  - Probleme beim Stuhlgang
-
----
-
-# Phase 5 – Lokale Persistenz & Privacy by Design
-
-## 5.1 IndexedDB
-
-- [x] **Dexie.js integrieren** _(app/src/db/db.ts)_
-
-  **Erklärung:** IndexedDB dient als lokale Datenbank. Dexie vereinfacht die Arbeit mit IndexedDB.
-
-- [x] **Datenmodell definieren** _(alle 11 Tabellen)_
-
-  ```text
-  userProfile
-  userProgress
-  exerciseHistory
-  workoutHistory
-  readinessChecks
-  symptomLogs
-  diastasisLogs
-  dailyHabits
-  savedRecipes
-  savedTips
-  appSettings
-  ```
-
----
-
-## 5.2 Datenschutz
-
-- [x] **Gesundheitsdaten ausschließlich lokal speichern** _(keine Netzwerkaufrufe im Code, CSP connect-src 'self')_
-
-- [x] **Keine Gesundheitsdaten in URLs** _(Routen enthalten nur Übungs-IDs; Zustand liegt im Speicher/IndexedDB)_
-
-- [x] **Keine unnötigen Analytics** _(keine Tracker eingebunden)_
-
-- [x] **Keine Pflicht zur Registrierung**
-
-- [x] **Lokale Daten löschen können** _(Einstellungen, im Browser getestet)_
-
-- [x] **Export/Import** _(JSON-Export/-Import mit Validierung getestet; PDF folgt in Phase 16)_
-
-  Beispiel:
-
-  ```text
-  Export
-  ↓
-  JSON/PDF
-  ↓
-  lokal speichern oder an Fachperson weitergeben
-  ```
-
----
-
-## 5.3 Datenbank-Versionierung
-
-- [x] **Schema-Versionen definieren** _(v1 → v2 inkl. Upgrade, per Test mit fake-indexeddb geprüft)_
-
-  **Erklärung:** Bei Änderungen am Datenmodell werden bestehende Daten migriert, anstatt verloren zu gehen.
-
----
-
-# Phase 6 – Offline-First
-
-## 6.1 Service Worker
-
-- [x] **App Shell cachen** _(Precache, im Flugmodus getestet)_
-
-- [x] **Workout-Inhalte offline verfügbar** _(Übungen sind gebündelt; Workout im Flugmodus getestet)_
-
-- [ ] **Audio offline verfügbar** _(Sprachansagen nutzen die Geräte-Sprachausgabe statt Audiodateien; Verfügbarkeit offline hängt von installierten Stimmen ab, ungeprüft)_
-
-- [ ] **Übungsbilder/GIFs/SVGs offline verfügbar** _(Cache-Regel /media/ (CacheFirst) vorbereitet; es gibt noch keine Medien)_
-
-- [x] **Rezepte offline verfügbar** _(e2e/offline.mjs)_
-
----
-
-## 6.2 Caching-Strategie
-
-```text
-App Shell
-→ StaleWhileRevalidate
-
-Übungsmedien
-→ CacheFirst
-
-Audio
-→ CacheFirst
-
-Content
-→ StaleWhileRevalidate
-
-Service Worker
-→ kontrolliertes Update
-```
-
-- [x] **Offline-Fallback** _(SPA-Fallback auf index.html, Deep-Link offline getestet; kontrolliertes Update mit Banner)_
-
-  **Erklärung:** Die App soll bei fehlender Internetverbindung nicht einfach eine Browser-Fehlerseite anzeigen.
-
----
-
-# Phase 7 – Core Workout Experience
-
-## 7.1 Workout-Player
-
-- [x] **Workout starten** _(Browser-E2E getestet)_
-- [x] **Pause** _(Browser-E2E getestet)_
-- [x] **Überspringen** _(Browser-E2E getestet)_
-- [x] **Zurück** _(implementiert, nicht im E2E getestet)_
-- [x] **Fortschrittsanzeige** _(Browser-E2E getestet)_
-- [x] **Übung wechseln** _(Browser-E2E getestet)_
-
----
-
-## 7.2 Screen Wake Lock
-
-- [x] **Display während des Workouts aktiv halten** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
-
-  **Erklärung:** Das Smartphone soll sich während einer Übung nicht automatisch sperren.
-
-- [x] **Fallback implementieren** _(Hinweis und Bedienung ohne Wake Lock getestet)_
-
-  **Erklärung:** Falls der Browser Wake Lock nicht unterstützt, muss die App trotzdem benutzbar bleiben.
-
----
-
-## 7.3 Hands-Free Audio
-
-- [x] **Audio-Cues** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen; Geräte-Sprachausgabe statt Audiodateien)_
-
-  Beispiele:
-
-  > „Einatmen.“
-
-  > „Ausatmen und Bewegung starten.“
-
-  > „Noch drei Wiederholungen.“
-
-- [x] **Timer und Gongs** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
-- [x] **Vibration/Haptik optional** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
-- [x] **Screenless Mode** _(Logik und API-Aufrufe per Test geprüft (e2e/audio.mjs); Hörbarkeit/Display auf echtem Gerät noch offen)_
-
-  **Erklärung:** Die Nutzerin soll ein Workout möglichst vollständig durchführen können, ohne ständig auf das Smartphone zu schauen.
-
----
-
-## 7.4 One-Thumb UX
-
-- [ ] **Alle Kernaktionen im unteren Bildschirmbereich**
-- [x] **Touch Targets ausreichend groß** _(min. 48 px)_
-- [x] **Keine wichtigen Funktionen ausschließlich über kleine Icons** _(Navigation mit Labels)_
-
----
-
-# Phase 8 – Adaptive Trainingslogik
-
-## 8.1 Readiness Check
-
-Beispiel:
-
-```text
-Wie fühlst du dich?
-
-Energie:
-○ 1 ○ 2 ○ 3 ○ 4 ○ 5
-
-Schmerzen:
-○ keine ○ leicht ○ mittel ○ stark
-
-Druckgefühl:
-○ nein ○ ja
-
-Letzte Einheit:
-○ gut ○ okay ○ Beschwerden
-```
-
-**Erklärung:** Der Tageszustand beeinflusst die Empfehlung.
-
----
-
-## 8.2 Dynamische Trainingsintensität
-
-```text
-guter Tag
-→ geplante Einheit
-
-erschöpfter Tag
-→ kurze Einheit
-
-Beschwerden
-→ Recovery
-
-Red Flag
-→ kein Workout
-```
-
----
-
-## 8.3 Post-Workout-Check
-
-- [x] **Direkte Reaktion erfassen** _(Browser-E2E getestet)_
-- [x] **Reaktion am nächsten Tag berücksichtigen** _(Folgetag-Reaktion wird gespeichert und hat Vorrang bei der Phasenfreigabe, Unit-Tests)_
-- [x] **Übungen automatisch regressieren** _(recommend() ersetzt Problem-Übungen der letzten 14 Tage, Unit-Test)_
-
-**Erklärung:** Nicht nur die absolvierte Einheit zählt, sondern auch die Reaktion des Körpers darauf.
-
----
-
-# Phase 9 – Wochenbett-Dailies & Recovery
-
-## 9.1 Recovery-Bibliothek
-
-### 2 Minuten
-
-- Atemübung
-- Positionierung
-- Entspannung
-
-### 5 Minuten
-
-- Mobilität
-- Beckenboden
-- sanfte Core-Aktivierung
-
-### 10 Minuten
-
-- vollständige Recovery-Einheit
-
----
-
-## 9.2 Anti-Streak-System
-
-- [x] **Keine Bestrafung bei Pausentagen** _(keine Streaks in der App; Verlauf zählt nur Erledigtes)_
-
-Nicht:
-
-```text
-🔥 Streak verloren
-```
-
-Sondern:
-
-```text
-12 Einheiten abgeschlossen
-```
-
-**Erklärung:** Pausentage sind ein normaler Bestandteil der Regeneration.
-
----
-
-## 9.3 Energieabhängige Empfehlungen
-
-```text
-Energie 1/5
-→ Recovery
-
-Energie 3/5
-→ 5-Minuten-Einheit
-
-Energie 5/5
-→ geplante Einheit
-```
-
----
-
-# Phase 10 – Sicherheits-Guardrails
-
-## 10.1 Geburtsart
-
-- [x] **Spontangeburt / Kaiserschnitt** _(Onboarding + Eignungslogik, Unit-Tests)_
-
-**Erklärung:** Die Geburtsart ist ein Eingangssignal für die individuelle Trainingslogik, sollte aber nicht allein darüber entscheiden, was erlaubt ist.
-
----
-
-## 10.2 Rektusdiastase
-
-- [x] **Selbstbeobachtung statt Diagnose** _(app/src/pages/Diastasis.tsx; Texte Entwurf, fachlich ungeprüft)_
-- [x] **Visuelle Anleitung** _(SVG-Schema + Schritte; Entwurf, fachlich ungeprüft)_
-- [x] **Doming beobachten** _(Doming → keine Übungen mit Doming-Kontraindikation, im Browser getestet)_
-- [x] **Messwerte dokumentieren** _(Fingerbreiten + Notiz, lokal gespeichert)_
-- [x] **Verlauf darstellen** _(SVG-Diagramm + Tabelle)_
-
-**Erklärung:** Die App unterstützt die Dokumentation, ersetzt aber keine professionelle Untersuchung.
-
----
-
-## 10.3 Phasen-Lock
-
-Nicht:
-
-```text
-6 Wochen → Phase 2
-```
-
-Sondern:
-
-```text
-Zeit seit Geburt
-+
-individuelle Voraussetzungen
-+
-Beschwerden
-+
-ggf. medizinische Freigabe
-```
-
-**Erklärung:** Phasen werden anhand mehrerer Kriterien freigeschaltet.
-
----
-
-# Phase 11 – Baby- und Alltagssituationen
-
-## 11.1 Baby-Modus
-
-Eigene Einstiegsmöglichkeiten:
-
-```text
-👶 Baby schläft
-🤱 Baby auf dem Arm
-🖐 Eine Hand frei
-😴 Komplett erschöpft
-⏱ Nur 5 Minuten
-```
-
-**Erklärung:** Die App wird an den tatsächlichen Alltag mit Baby angepasst.
-
----
-
-## 11.2 Einhand-Übungen
-
-- [x] Übungen nach `oneHandFriendly` filtern _(Übungen-Seite und Baby-Modus, getestet)_
-- [x] geeignete Übungen für Situationen mit Baby kennzeichnen _(Kennzeichnung 'Einhand-geeignet'; jede Übung braucht noch fachliche Prüfung)_
-
-**Erklärung:** Für jede einzelne Übung muss separat geprüft werden, ob sie in dieser Situation sicher ist.
-
----
-
-## 11.3 Alltags-Micro-Habits
-
-Beispiele:
-
-- über die Seite aufstehen
-- ergonomisch heben
-- beim Husten/Niesen bewusst reagieren
-- Lasten näher am Körper halten
-- Pausen einbauen
-
----
-
-# Phase 12 – Ernährung & Rezepte
-
-## 12.1 Mikronährstoff-Lexikon
-
-- [x] **50–60 Lebensmittel** _(56 Einträge in app/src/content/nutrition.ts; Entwurf, Quellen/Werte ungeprüft)_
-
-Mögliche Kategorien:
-
-- Eisen
-- Vitamin C
-- Zink
-- Magnesium
-- Omega-3
-- Protein
-- weitere relevante Nährstoffe
-
----
-
-## 12.2 Evidenzbasierte Content-Struktur
-
-```text
-food
-nutrient
-claim
-evidenceLevel
-source
-preparationTip
-reviewedAt
-```
-
-**Erklärung:** Ernährungstipps sollen nachvollziehbar sein und nicht versehentlich als medizinische Therapieempfehlung erscheinen.
-
----
-
-## 12.3 Rezept-Pipeline
-
-- [ ] **Wöchentliche Rezepte generieren** _(umgesetzt: 13 handgeschriebene Rezepte, wöchentlich rotierende Auswahl; eine automatische Generierung neuer Rezepte, z. B. per KI-Pipeline, gibt es nicht)_
-
-Eigenschaften:
-
-```text
-warm
-simple
-oneHandFriendly
-quick
-freezerFriendly
-proteinRich
-ironRich
-```
-
-- [x] **Nährstoff-Synergien kennzeichnen** _(bei Rezepten mit Hinweistext; Entwurf, ungeprüft)_
-
-  Beispiel:
-
-  ```text
-  Eisenquelle
-  +
-  Vitamin-C-Quelle
-  ```
-
-  **Erklärung:** Solche Angaben sollten fachlich geprüft und nicht überinterpretiert werden.
-
----
-
-# Phase 13 – Gamechanger / ProTips
-
-## 13.1 ProTips-Datenbank
-
-```text
-protips.json
-```
-
-Kategorien:
-
-```text
-sneaky_exercise
-toddler_hack
-nutrition_shortcut
-mindset
-recovery
-everyday_life
-```
-
----
-
-## 13.2 Personalisierung
-
-Beispiel:
-
-```text
-Energie niedrig
-→ 0-Minuten-Recovery-Tipp
-
-Baby unruhig
-→ Alltagstipp
-
-wenig Zeit
-→ 2-Minuten-Tipp
-```
-
----
-
-# Phase 14 – Kalender & Verlauf
-
-## 14.1 Wochenbett-Timeline
-
-```text
-Geburt
-│
-├── Woche 1
-├── Woche 2
-├── Woche 3
-├── ...
-├── Woche 12
-└── langfristiger Aufbau
-```
-
-**Erklärung:** Die Timeline dient als Orientierung und nicht als automatische medizinische Freigabe.
-
----
-
-## 14.2 Termine
-
-Optional:
-
-- Hebammentermine
-- gynäkologische Termine
-- Nachuntersuchungen
-- eigene Erinnerungen
-
----
-
-## 14.3 Fortschrittsübersicht
-
-Nicht primär:
-
-```text
-Gewicht
-Kalorien
-Streak
-```
-
-Sondern:
-
-```text
-Übungseinheiten
-Recovery-Tage
-Symptomverlauf
-Alltagsbelastbarkeit
-Körperwahrnehmung
-abgeschlossene Micro-Habits
-```
-
----
-
-# Phase 15 – Accessibility
-
-- [ ] **VoiceOver-Unterstützung** _(axe-Prüfung bestanden, mit echtem VoiceOver nicht getestet)_
-- [ ] **TalkBack-Unterstützung** _(axe-Prüfung bestanden, mit echtem TalkBack nicht getestet)_
-- [x] **Reduced Motion** _(CSS prefers-reduced-motion, per Playwright geprüft)_
-- [x] **Kontrast prüfen** _(axe-core WCAG 2 AA, hell und dunkel, alle Seiten)_
-- [x] **Nicht ausschließlich Farbe verwenden** _(Ampel/Banner mit Text + Symbol, Navigation mit Unterstreichung)_
-- [x] **Große Touchflächen** _(alle Bedienelemente >= 44 px, per Playwright geprüft)_
-- [ ] **Screenreader-kompatible Timer** _(Timer mit role=timer und gedrosselter Ansage umgesetzt, nicht mit echtem Screenreader getestet)_
-- [x] **Audio vollständig optional** _(alle Funktionen ohne Audio nutzbar, Audio in Einstellungen abschaltbar)_
-
----
-
-# Phase 16 – Export & Kommunikation mit Fachpersonen
-
-## 16.1 Diastase-/Symptom-Export
-
-- [x] **PDF/Text-Export** _(Textdatei + Drucken als PDF (Browser); lokal erzeugt)_
-
-Beispielsweise:
-
-```text
-Zeitraum
-Übungen
-Beschwerden
-Messwerte
-Verlauf
-```
-
----
-
-## 16.2 Datenschutzfreundlicher Export
-
-**Erklärung:** Der Export wird ausschließlich auf Wunsch erzeugt. Es erfolgt kein automatisches Hochladen.
-
----
-
-## 16.3 Fachpersonen-Ansicht
-
-Optional:
-
-> „Zeige meiner Hebamme meinen Verlauf.“
-
-**Erklärung:** Die Nutzerin entscheidet vollständig, welche Informationen exportiert werden.
-
----
-
-# Phase 17 – Testing
-
-## 17.1 Unit Tests
-
-Testen von:
-
-- Trainingslogik
-- Readiness
-- Phasenfreigaben
-- Red Flags
-- Progressionen
-- Datenbank-Migrationen
-
----
-
-## 17.2 Safety Tests
-
-Beispiele:
-
-```text
-Kaiserschnitt + frühe Phase
-→ ungeeignete Übungen nicht anzeigen
-
-Red Flag
-→ Workout stoppen
-
-Druckgefühl
-→ keine automatische Progression
-
-Doming
-→ Regression anbieten
-
-starke Erschöpfung
-→ Recovery anbieten
-```
-
----
-
-## 17.3 Offline Testing
-
-- [x] Flugmodus _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-- [x] App neu laden _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-- [x] PWA komplett schließen _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-- [x] wieder öffnen _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-- [x] Workout starten _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-- [ ] Audio abspielen
-- [x] Daten speichern _(Playwright-Offline-Test; Daten bleiben nach Reload erhalten)_
-
-**Erklärung:** Die App muss die vorgesehenen Offline-Funktionen auch ohne Internet zuverlässig ausführen.
-
----
-
-## 17.4 Real-Life-Einhand-Test
-
-Testablauf:
-
-```text
-Baby auf dem anderen Arm
+APP ÖFFNEN
 ↓
-App öffnen
+HEUTE
+„Wie geht es dir?“
 ↓
-Workout auswählen
+MINI-CHECK-IN
 ↓
-Start
+SICHERHEIT OK?
+→ Nein: Orientierung + professionelle Hilfe
+→ Ja: „Was ist gerade möglich?“
 ↓
-Pause
+3 / 5 / 10 / 20 MINUTEN
 ↓
-Weiter
+PASSENDE EINHEIT ODER ERHOLUNG
 ↓
-Workout beenden
-```
-
-**Erklärung:** Jeder wichtige Vorgang muss mit einer Hand funktionieren.
-
----
-
-## 17.5 Geräte-Testing
-
-Mindestens:
-
-```text
-iPhone / Safari
-Android / Chrome
-kleines Smartphone
-großes Smartphone
-```
-
-Zusätzlich:
-
-- Dark Mode
-- langsame Verbindung
-- Offline
-- installierte PWA
-- nicht installierte Website
-
----
-
-# Phase 18 – Performance & PWA Audit
-
-- [x] **Lighthouse Audit** _(mobil/simuliert: Performance 99, Barrierefreiheit 100, Best Practices 100, SEO 91 (robots.txt bewusst auf Disallow/noindex))_
-- [x] **Bundle Size analysieren** _(Haupt-Bundle 417 kB (132 kB gzip), 11 Lazy-Chunks, Precache 525 kB)_
-- [x] **Lazy Loading** _(Routen außerhalb des Kernablaufs per React.lazy)_
-- [ ] **Bilder optimieren** _(keine Bilder im Einsatz außer PWA-Icons (je unter 18 KB))_
-- [ ] **Audio-Dateien optimieren** _(keine Audiodateien, Ansagen über Geräte-Sprachausgabe)_
-- [x] **Service-Worker-Cache überprüfen** _(29 Precache-Einträge, Offline-Tests bestanden)_
-- [x] **First Load optimieren** _(LCP 1,9 s, TBT 0 ms (Lighthouse mobil simuliert))_
-- [x] **Offline-Start testen** _(e2e/offline.mjs)_
-
----
-
-# Phase 19 – Deployment
-
-## 19.1 Produktionscontainer
-
-```text
-Source
- ↓
-Docker Build
- ↓
-Node Build Stage
- ↓
-Nginx
- ↓
-HTTPS Reverse Proxy
- ↓
-PWA
-```
-
----
-
-## 19.2 Domain & HTTPS
-
-- [ ] Domain konfigurieren
-- [ ] SSL-Zertifikat
-- [ ] Reverse Proxy
-- [ ] HTTP → HTTPS Redirect
-- [x] Security Header _(nginx: CSP, X-Frame-Options, nosniff, Referrer-/Permissions-Policy per curl geprüft)_
-
----
-
-## 19.3 Installation auf Zielgeräten
-
-- [ ] iPhone Safari → Zum Home-Bildschirm
-- [ ] Android Chrome → App installieren
-- [ ] App-Icon überprüfen
-- [ ] Standalone-Modus überprüfen
-- [ ] Safe Areas überprüfen
-
----
-
-# Phase 20 – MVP-Abgrenzung
-
-Für die erste funktionierende Version bewusst nicht alles gleichzeitig bauen.
-
-## MVP
-
-```text
-✓ PWA
-✓ Docker
-✓ HTTPS
-✓ IndexedDB
-✓ Offline
-✓ 15–20 Übungen
-✓ Workout Player
-✓ Audio-Cues
-✓ Wake Lock
-✓ Readiness Check
-✓ Recovery-Modus
-✓ Sicherheitslogik
-✓ Basis-Beckenboden
-✓ einfacher Fortschritt
-✓ lokale Daten
-```
-
-## Version 1.1
-
-```text
-○ Rezepte
-○ Ernährung
-○ ProTips
-○ Kalender
-○ Baby-Modus
-○ PDF-Export
-```
-
-## Version 1.2+
-
-```text
-○ adaptive Progression
-○ umfangreiches Symptomtracking
-○ Fachpersonen-Export
-○ erweiterte Auswertungen
-○ zusätzliche Trainingsprogramme
-```
-
----
-
-# Übergeordnete Architektur
-
-Die App sollte konzeptionell aus fünf Schichten bestehen:
-
-```text
-┌──────────────────────────────────┐
-│              UI                  │
-│  Workout / Dashboard / Rezepte   │
-└────────────────┬─────────────────┘
-                 │
-┌────────────────▼─────────────────┐
-│       Recommendation Engine      │
-│ Readiness / Progression / Safety │
-└────────────────┬─────────────────┘
-                 │
-┌────────────────▼─────────────────┐
-│          Domain Model            │
-│ Exercise / Workout / Symptoms    │
-│ Recipe / Progress / User State   │
-└────────────────┬─────────────────┘
-                 │
-┌────────────────▼─────────────────┐
-│        Local Persistence         │
-│             Dexie                │
-└────────────────┬─────────────────┘
-                 │
-┌────────────────▼─────────────────┐
-│         PWA / Service Worker     │
-│       Offline / Cache / Update   │
-└──────────────────────────────────┘
-```
-
-## Zentrale Architekturregel
-
-Die UI sollte **nicht selbst entscheiden**, ob eine Übung erlaubt ist.
-
-Nicht:
-
-```text
-if (week > 6) showExercise()
-```
-
-Sondern:
-
-```text
-userState
-+
-exercise
-+
-readiness
-+
-symptoms
-+
-phase
+WORKOUT
 ↓
-recommendation
+„Wie fühlt sich dein Körper jetzt an?“
+↓
+SPEICHERN + KLEINER FORTSCHRITT
+↓
+MORGEN WIEDER HEUTE
 ```
 
-Dadurch bleibt die Anwendung erweiterbar, testbar und die Sicherheitslogik ist zentral kontrollierbar.
+## 10. Backlog nach Priorität
 
----
+| Priorität | Feature | Nutzen |
+|-----------|---------|--------|
+| P0 | Mini-Check-in | Weniger Aufwand täglich |
+| P0 | Red-Flag-Flow | Sicherheit + klare nächste Schritte |
+| P0 | Heute als zentraler Einstieg | Weniger Navigation |
+| P0 | „Was ist gerade möglich?“ | Passt zum echten Alltag |
+| P0 | Workout-Aktionen trennen | Weniger Fehlbedienung |
+| P0 | Fachliche Prüfung der Sicherheitstexte | Vertrauen + Risikoreduktion |
+| P1 | „Ist das normal?“ | Orientierung bei Beschwerden |
+| P1 | Mentales Wohlbefinden | Ganzheitlichere Begleitung |
+| P1 | Persönliche Ziele | Bessere Personalisierung |
+| P1 | „Mein Weg“ | Motivation ohne Leistungsdruck |
+| P2 | Inhalts-Redesign | Bessere Auffindbarkeit |
+| P2 | Sync/Daten-UX | Vertrauen und Kontrolle |
+| P3 | Social/Gamification | Nicht notwendig für Kernnutzen |
 
-# Leitprinzipien
+## 11. Erfolgsmetriken
 
-### 1. Recovery vor Performance
+- [x] Time-to-value: Wie schnell erreicht eine neue Nutzerin eine passende Empfehlung? _(per Test: 2 Fingertipps nach dem Onboarding; siehe docs/metrics.md)_
+- [ ] Check-in-Abschlussrate. _(nicht erhoben, siehe docs/metrics.md (kein Tracking))_
+- [ ] Anteil der Nutzerinnen, die nach dem Check-in eine sinnvolle Empfehlung erhalten. _(als Unit-Test abgesichert; Messung über Nutzerinnen nicht erhoben, siehe docs/metrics.md)_
+- [ ] Workout-Abbruchrate und Grund des Abbruchs. _(nicht erhoben, siehe docs/metrics.md)_
+- [ ] Anteil der Nutzerinnen, die nach einer Einheit „gut/okay“ angeben. _(nicht erhoben, siehe docs/metrics.md)_
+- [ ] Wiederkehr nach 1, 7 und 28 Tagen. _(nicht erhoben, siehe docs/metrics.md)_
+- [ ] Anteil der Tage, an denen Erholung bewusst gewählt wird (nicht als Misserfolg werten). _(für die Nutzerin selbst in „Mein Weg“ sichtbar; Auswertung über Nutzerinnen nicht erhoben)_
+- [ ] Anzahl sicher eskalierter Red-Flag-Fälle. _(nicht erhoben, siehe docs/metrics.md)_
 
-Die Nutzerin soll nicht das Gefühl bekommen, sie müsse möglichst schnell wieder „fit“ werden.
+## 12. Definition of Done für den nächsten großen Release
 
-### 2. Symptome vor Kalender
+- [ ] Eine neue Nutzerin versteht die App nach dem ersten Öffnen ohne Erklärung. _(nur per Nutzertest zu bestätigen)_
+- [x] Ein normaler Check-in dauert ungefähr 10–15 Sekunden. _(2 bis 3 Fingertipps; echte Zeit per Nutzertest zu bestätigen)_
+- [x] Die App bietet nach dem Check-in genau eine klare Hauptempfehlung plus maximal zwei Alternativen. _(getestet)_
+- [x] Bei Warnzeichen ist der nächste Schritt eindeutig. _(getestet)_
+- [x] Jede Übung kann sicher vereinfacht oder beendet werden. _(„Leichtere Variante“ (oder einfachste Stufe) und „Training beenden“ immer möglich)_
+- [x] Erholung wird als legitime Empfehlung behandelt. _(„Heute lieber Erholung?“, Erholung zählt in „Mein Weg“)_
+- [ ] Sicherheitstexte und zentrale Inhalte sind fachlich geprüft und versioniert. _(versioniert (Git, Prüffelder), aber noch nicht fachlich geprüft)_
+- [x] Die Nutzerin versteht, warum sie eine Empfehlung erhält. _(Gründe auf der Karte plus „Warum?“)_
+- [ ] Die App fühlt sich auch an einem chaotischen Tag mit Baby hilfreich an. _(Baby-Kontexte, kurze Einheiten und Erholung umgesetzt; Urteil nur per Nutzertest)_
 
-Eine Woche im Wochenbett ist kein ausreichender Indikator für individuelle Belastbarkeit.
+## 13. Was bewusst NICHT auf die nächste Roadmap gehört
 
-### 3. Kleine Einheiten zählen
+- Streaks und tägliche Pflichtziele
+- Kalorien- und Gewichtsoptimierung
+- Komplexe Leistungsrankings
+- Social Feed / Community als Selbstzweck
+- Noch mehr Inhalte ohne bessere Auffindbarkeit
+- Komplexe KI-Trainingspläne vor einer stabilen Sicherheits- und UX-Basis
+- Weitere Navigationsebenen, bevor der Kernpfad vereinfacht ist
 
-2 Minuten Bewegung sind besser als eine App, die nur 30-Minuten-Workouts anbietet.
-
-### 4. Pausieren ist kein Versagen
-
-Keine Streak-Bestrafung.
-
-### 5. Lokale Daten
-
-Gesundheitsinformationen bleiben möglichst auf dem Gerät.
-
-### 6. Safety by Design
-
-Sicherheit wird nicht nachträglich ergänzt, sondern ist Bestandteil des Datenmodells und der Recommendation Engine.
-
-### 7. Fachperson statt App-Diagnose
-
-Die App unterstützt die Nutzerin, ersetzt aber keine Hebamme, Physiotherapeutin oder Ärztin.
-
-### 8. Alltag statt Fitnessstudio
-
-Die App sollte für Situationen funktionieren, in denen ein Baby auf dem Arm liegt, nur fünf Minuten Zeit vorhanden sind oder die Nutzerin extrem müde ist.
-
-### 9. Adaptiv statt linear
-
-Die Nutzerin soll nicht einfach einen starren Trainingsplan abarbeiten. Die App soll auf ihren aktuellen Zustand reagieren.
-
-### 10. Kein Druck
-
-Der wichtigste Fortschritt ist nicht die Anzahl der absolvierten Workouts, sondern dass sich die Nutzerin im Alltag wieder sicherer und belastbarer fühlt.
-
----
-
-# Offene Ideen aus dem ersten Praxistest
-
-- [ ] **Bilder oder Videos zu den Übungen** _(Datenmodell `media` und Anzeige sind vorbereitet, Cache-Regel `/media/` ebenfalls; es fehlen lizenzierte Aufnahmen oder Illustrationen, am besten von der Physiotherapeutin)_
-- [x] **Konten und Synchronisation** _(Ende-zu-Ende-verschlüsselter Sync, Konzept und Betrieb: docs/sync.md; Server- und Browser-Tests bestanden, im Produktivbetrieb noch nicht ausgeführt)_
-- [ ] **Ernährungshinweise abhängig von Woche, Stillen oder Blutverlust** _(erst nach fachlicher Prüfung, siehe docs/content-governance.md)_
-- [ ] **Quellen für die Übungen ergänzen** _(Übungen wurden aus allgemeinem Rückbildungs-Wissen zusammengestellt, ohne Einzelquellen)_
-
+**Empfohlene Reihenfolge:** erst Sicherheit und Vereinfachung, dann Personalisierung, danach Inhalte und Ausbau. Der größte Produktgewinn liegt aktuell nicht in mehr Funktionen, sondern darin, vorhandene Funktionen im richtigen Moment automatisch und verständlich anzubieten.

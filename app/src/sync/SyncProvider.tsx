@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { db } from '../db/db'
+import { db, type SyncProblem } from '../db/db'
 import { createApi } from './api'
 import { createSync, type SyncClient, type SyncResult } from './engine'
 
@@ -12,6 +12,8 @@ type Ctx = {
   status: SyncStatus
   username: string | null
   lastSyncAt: string | null
+  /** Ursache des letzten Fehlers, falls vorhanden */
+  problem: SyncProblem | null
   /** Sofort abgleichen (z. B. nach dem Anmelden oder auf Knopfdruck) */
   syncNow: () => Promise<SyncResult>
 }
@@ -75,11 +77,11 @@ export function SyncProvider({ children }: { children: ReactNode }) {
     else if (state.loginRequired) status = 'login_required'
     else if (busy) status = 'syncing'
     else if (last === 'offline') status = 'offline'
-    else if (last === 'error') status = 'error'
+    else if (state.lastError || last === 'error') status = 'error'
     else status = 'ok'
   }
 
-  return <SyncCtx.Provider value={{ client, status, username, lastSyncAt: state?.lastSyncAt ?? null, syncNow }}>{children}</SyncCtx.Provider>
+  return <SyncCtx.Provider value={{ client, status, username, lastSyncAt: state?.lastSyncAt ?? null, problem: state?.lastError ?? null, syncNow }}>{children}</SyncCtx.Provider>
 }
 
 export function useSync() {

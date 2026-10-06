@@ -13,6 +13,7 @@ const TABLES = [
   'diastasisLogs',
   'dailyHabits',
   'appointments',
+  'moodLogs',
   'savedRecipes',
   'savedTips',
   'appSettings',

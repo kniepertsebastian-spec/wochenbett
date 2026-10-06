@@ -5,11 +5,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { createApp } from '../../../server/app.mjs'
 import { AppDB } from '../db/db'
 import { createApi } from './api'
-import { createSync } from './engine'
+import { classifyError, createSync } from './engine'
+import { ApiError } from './api'
+import { syncProblemHelp } from './messages'
 
 type TestApp = {
   server: { listen: (port: number, host: string, cb: () => void) => void; address: () => unknown }
-  db: { prepare: (s: string) => { all: () => { blob: string }[] } }
+  db: { prepare: (s: string) => { all: () => { blob: string }[]; run: (...a: unknown[]) => unknown } }
   close: () => Promise<void>
 }
 let app: TestApp
@@ -140,5 +142,44 @@ describe('Sync Ende-zu-Ende', () => {
     await A.sync.register('Ida', 'Garten Zeit Licht Brücke', 'einladung')
     const { exportAll } = await import('../db/privacy')
     expect(Object.keys((await exportAll(A.db)).data)).not.toContain('syncState')
+  })
+
+  it('Fehler werden verständlich eingeordnet und mit nächstem Schritt erklärt', async () => {
+    const A = device()
+    await A.db.userProfile.put(profile('x'))
+    await A.sync.register('Jule', 'Brücke Tasse Wiese Nacht', 'einladung')
+    await A.db.workoutHistory.add(workout('2026-10-08T08:00:00.000Z'))
+    const broken = (status: number) => createSync({ db: A.db, api: createApi(base, async (input, init) => (String(input).endsWith('/data') && init?.method === 'GET' ? new Response('{}', { status }) : fetch(input, init))), iterations: 1000 })
+    expect(await broken(500).syncNow()).toBe('error')
+    expect((await A.db.syncState.get('me'))?.lastError).toBe('server')
+    expect(await broken(429).syncNow()).toBe('error')
+    expect((await A.db.syncState.get('me'))?.lastError).toBe('rate_limited')
+    // Nach einem erfolgreichen Abgleich ist der Fehler weg
+    expect(await A.sync.syncNow()).toBe('pushed')
+    expect((await A.db.syncState.get('me'))?.lastError ?? null).toBeNull()
+    for (const p of Object.values(syncProblemHelp)) {
+      expect(p.text.length).toBeGreaterThan(20)
+      expect(p.action.length).toBeGreaterThan(20)
+    }
+  })
+
+  it('Nicht entschlüsselbare Daten werden erkannt und führen zu Hilfe statt Absturz', async () => {
+    const A = device(), B = device()
+    await A.db.userProfile.put(profile('x'))
+    await A.sync.register('Kira', 'Sonne Tisch Wolke Stein', 'einladung')
+    await B.sync.login('kira', 'Sonne Tisch Wolke Stein')
+    await A.db.workoutHistory.add(workout('2026-10-09T08:00:00.000Z'))
+    await A.sync.syncNow()
+    // Server-Daten durch Unlesbares ersetzen
+    app.db.prepare("UPDATE data SET blob = '{\"v\":1,\"iv\":\"AAAAAAAAAAAAAAAA\",\"ct\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}' WHERE version >= 1").run()
+    expect(await B.sync.syncNow()).toBe('error')
+    expect((await B.db.syncState.get('me'))?.lastError).toBe('decrypt')
+    expect(await B.db.userProfile.count()).toBe(1) // lokale Daten unangetastet
+  })
+
+  it('Fehlerklassen', () => {
+    expect(classifyError(new ApiError(413, 'too_large'))).toBe('too_large')
+    expect(classifyError(new ApiError(503, 'x'))).toBe('server')
+    expect(classifyError(new Error('boom'))).toBe('unknown')
   })
 })

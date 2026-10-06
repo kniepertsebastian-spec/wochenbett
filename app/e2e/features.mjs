@@ -1,20 +1,25 @@
 // Baby-Modus, Micro-Habits, Diastasis/Doming, Rezepte, Ernährung, Termine, Export
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, checkIn, launch, onboard, openHabits } from './helpers.mjs'
 
 const { browser, page: p, errors } = await launch()
 await onboard(p, { birth: '2026-08-20', type: 'Kaiserschnitt' })
 
+await openHabits(p)
 await p.getByLabel('Über die Seite aufstehen').click()
 await p.waitForTimeout(300)
 await p.reload()
+await openHabits(p)
 check('Micro-Habit bleibt gespeichert', await p.getByLabel('Über die Seite aufstehen').isChecked())
 
-await p.getByRole('link', { name: /Baby auf dem Arm/ }).click()
-for (const t of ['5', 'keine', 'nein', 'gut']) await p.getByText(t, { exact: true }).first().click()
-await p.getByLabel('Nichts davon').check()
-await p.getByRole('button', { name: 'Weiter' }).click()
-await p.getByRole('heading', { name: /Recovery/ }).waitFor()
-check('Baby auf dem Arm: nur Einhand-Übungen', (await p.getByText(/Einhand-geeignet$/).count()) === (await p.locator('main h3').count()))
+await checkIn(p)
+await p.getByRole('heading', { name: /^Heute passt/ }).waitFor()
+for (const chip of ['Baby schläft', 'Baby auf dem Arm', 'Eine Hand frei', 'Ich habe 5 Minuten', 'Ich bin komplett erschöpft', 'Ich habe 10–20 Minuten und möchte etwas tun']) {
+  check(`Kontext "${chip}" wählbar`, (await p.getByRole('button', { name: chip, exact: true }).count()) === 1)
+}
+await p.getByRole('button', { name: 'Baby auf dem Arm', exact: true }).click()
+check('Baby auf dem Arm: nur Einhand-Übungen (Begründung sichtbar)', await p.getByText(/nur Übungen mit einer Hand/).waitFor({ timeout: 5000 }).then(() => true, () => false))
+await p.getByRole('button', { name: 'Ich habe 10–20 Minuten und möchte etwas tun', exact: true }).click()
+check('10–20 Minuten gewählt', await p.getByRole('button', { name: 'Ich habe 10–20 Minuten und möchte etwas tun', exact: true }).getAttribute('aria-pressed') === 'true')
 
 await p.goto(BASE + '/diastasis')
 await p.locator('label', { hasText: /^2$/ }).first().click()

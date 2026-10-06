@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
-import type { Exercise, Recommendation, Readiness, Situation } from '../domain/types'
+import type { Exercise, Readiness, Situation } from '../domain/types'
+import type { AlternativeId } from '../engine/summary'
 
 /** Flüchtiger Zustand im Speicher (nie in der URL, nie auf dem Server). */
 export type PlannedSession = {
@@ -11,28 +12,26 @@ export type PlannedSession = {
   silent?: boolean
 }
 
+/** Auswahl der Nutzerin auf "Heute": Kontext ("Was ist gerade möglich?") oder Alternative. */
+export type Choice = { situation?: Situation; alt?: AlternativeId }
+
 type Ctx = {
-  recommendation: Recommendation | null
-  setRecommendation: (r: Recommendation | null, readiness?: Readiness, situation?: Situation) => void
-  situation: Situation | null
   session: PlannedSession | null
   setSession: (s: PlannedSession | null) => void
-  lastReadiness: Readiness | null
+  choice: Choice
+  setChoice: (c: Choice) => void
+  /** Kleine Rückmeldung nach dem Speichern einer Einheit (erscheint auf "Heute") */
+  progressNote: string | null
+  setProgressNote: (n: string | null) => void
 }
 
 const SessionCtx = createContext<Ctx | null>(null)
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [recommendation, setRec] = useState<Recommendation | null>(null)
   const [session, setSession] = useState<PlannedSession | null>(null)
-  const [lastReadiness, setLast] = useState<Readiness | null>(null)
-  const [situation, setSituation] = useState<Situation | null>(null)
-  const setRecommendation = (r: Recommendation | null, readiness?: Readiness, sit?: Situation) => {
-    setRec(r)
-    if (readiness) setLast(readiness)
-    setSituation(sit ?? null)
-  }
-  return <SessionCtx.Provider value={{ recommendation, setRecommendation, situation, session, setSession, lastReadiness }}>{children}</SessionCtx.Provider>
+  const [choice, setChoice] = useState<Choice>({})
+  const [progressNote, setProgressNote] = useState<string | null>(null)
+  return <SessionCtx.Provider value={{ session, setSession, choice, setChoice, progressNote, setProgressNote }}>{children}</SessionCtx.Provider>
 }
 
 export function useSession() {

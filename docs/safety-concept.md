@@ -54,7 +54,7 @@ Zuordnung (Eingaben siehe Readiness Check, Phase 8.1):
 
 Der Gesamtstatus ist das **Maximum** der Einzelbeiträge (Rot > Gelb > Grün). Während eines Workouts löst eine gemeldete Red Flag oder starker Schmerz sofortigen Abbruch aus.
 
-Die Logik gehört in die zentrale Recommendation Engine (siehe Architekturregel in `roadmap.md`), nicht in die UI.
+Die Logik gehört in die zentrale Recommendation Engine (siehe Architekturregel in `docs/roadmap-archiv-v1.md`), nicht in die UI.
 
 ## 3. Keine Diagnosen
 

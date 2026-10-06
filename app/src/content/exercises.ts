@@ -57,7 +57,7 @@ const flags: RedFlagId[] = ['pain_increasing', 'pelvic_pressure_severe', 'sympto
 
 const cue = (trigger: AudioCue['trigger'], text: string): AudioCue => ({ trigger, text })
 
-type Spec = Omit<Exercise, 'meta' | 'redFlags' | 'why' | 'requires' | 'oneHandFriendly' | 'bedFriendly' | 'domingWarning' | 'audioCues' | 'stopCriteria'> &
+type Spec = Omit<Exercise, 'meta' | 'redFlags' | 'why' | 'focus' | 'requires' | 'oneHandFriendly' | 'bedFriendly' | 'domingWarning' | 'audioCues' | 'stopCriteria'> &
   Partial<Pick<Exercise, 'redFlags' | 'requires' | 'oneHandFriendly' | 'bedFriendly' | 'domingWarning' | 'audioCues' | 'stopCriteria'>>
 
 function ex(s: Spec): Exercise {
@@ -77,11 +77,48 @@ function ex(s: Spec): Exercise {
     redFlags: flags,
     ...s,
     why: whyText[s.id] ?? '',
+    focus: focusText[s.id] ?? '',
     meta: draftMeta,
   }
 }
 
 const p = (n: PhaseId): PhaseId => n
+
+const focusText: Record<string, string> = {
+  "belly-breathing": "Atme so, dass sich Bauch und Flanken sanft weiten. Die Schultern bleiben locker.",
+  "pelvic-floor-awareness": "Du musst nichts anspannen. Nimm nur wahr, wie sich dein Beckenboden beim Atmen bewegt.",
+  "pelvic-floor-release": "Lass wirklich los. Spürst du Druck oder Schmerz, höre auf.",
+  "breath-pelvic-floor": "Heben nur ganz leicht und beim Ausatmen. Beim Einatmen vollständig loslassen, nicht pressen.",
+  "pelvic-tilt": "Kleine, weiche Bewegung. Der Bauch soll sich nicht nach oben wölben.",
+  "knee-sway": "Nur so weit, wie es angenehm ist. Zieht es an der Narbe oder im Bauch, mach die Bewegung kleiner.",
+  "neck-shoulder-mobility": "Langsam bewegen und nie in den Schmerz hinein. Atme ruhig weiter.",
+  "heel-slide": "Das Becken bleibt ruhig. Wölbt sich der Bauch in der Mitte, stoppe und wähle etwas Leichteres.",
+  "glute-bridge": "Hebe das Becken beim Ausatmen und senke es langsam. Nicht ins Hohlkreuz drücken.",
+  "clamshell": "Nur das Knie öffnet sich, das Becken bleibt ruhig und kippt nicht nach hinten.",
+  "quadruped-weight-shift": "Schaukle langsam. Der Rücken bleibt gerade, der Bauch locker.",
+  "cat-cow": "Bewege dich mit dem Atem, nicht ins Hohlkreuz drücken. Der Bauch bleibt weich.",
+  "wall-pushup": "Beim Wegdrücken ausatmen, nicht pressen. Der Bauch bleibt locker.",
+  "sit-to-stand": "Beim Aufstehen ausatmen und nicht pressen. Spürst du Druck im Becken, höre auf.",
+  "marching-bridge": "Das Becken bleibt waagerecht. Hebe das Knie nur wenig an.",
+  "dead-bug-heel-tap": "Der Rücken bleibt ruhig am Boden. Wölbt sich der Bauch nach oben, mach es leichter.",
+  "bird-dog": "Becken und Rücken bleiben ruhig. Strecke nur so weit, wie du die Stabilität hältst.",
+  "side-lying-leg-lift": "Das Bein nur kontrolliert anheben. Becken und Oberkörper bleiben still.",
+  "supported-squat": "Halte dich fest und geh nur so tief, wie es angenehm ist. Beim Aufrichten ausatmen.",
+  "dead-bug-alternating": "Der Rücken bleibt am Boden und der Bauch flach. Bei Wölbung oder Druck sofort leichter.",
+  "single-leg-bridge": "Das Becken bleibt gerade. Wackelt es stark, nimm die einfachere Brücke.",
+  "suitcase-carry": "Aufrecht gehen, nicht zur Seite kippen und weiteratmen. Nicht die Luft anhalten.",
+  "foot-pumps": "Ganz ohne Kraft. Spürst du Schmerzen oder Schwellung im Bein, höre auf und lass es abklären.",
+  "shoulder-blade-slide": "Nur die Schulterblätter bewegen, die Schultern nicht hochziehen.",
+  "glute-squeeze": "Spanne nur leicht an, ohne zu pressen, und lass beim Einatmen ganz los.",
+  "hand-wrist-release": "Bewege dich locker und ohne Kraft. Das darf angenehm sein.",
+  "side-lying-breathing": "Spüre, wie sich die obere Rippenseite beim Einatmen weitet. Lass die Schultern schwer.",
+  "lying-arm-stretch": "Führe die Arme nur so weit, wie es angenehm ist. Zieht es an der Narbe, bleib tiefer.",
+  "ball-pelvic-circles": "Sitze aufrecht und halte dich notfalls an einer Wand fest. Kleine Kreise reichen.",
+  "ball-squeeze-bridge": "Drücke den Ball sanft, nicht fest. Atme beim Anheben aus und presse nicht.",
+  "band-row": "Ziehe die Ellenbogen nach hinten, nicht die Schultern nach oben. Atme beim Ziehen aus.",
+  "band-clamshell": "Das Band soll nur leichten Widerstand geben. Das Becken bleibt ruhig.",
+  "ball-wall-squat": "Geh nur so tief, wie es angenehm ist. Beim Aufrichten ausatmen, nicht pressen."
+}
 
 const whyText: Record<string, string> = {
   "belly-breathing": "Ruhiges Atmen in den Bauch und die Flanken beruhigt das Nervensystem und gibt dem Körper ein Signal zum Entspannen. Das Zwiebelfell der Atmung, das Zwerchfell, arbeitet außerdem eng mit dem Beckenboden und der tiefen Bauchmuskulatur zusammen. Deshalb beginnt fast alles mit der Atmung.",

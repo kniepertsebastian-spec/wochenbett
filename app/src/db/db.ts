@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie'
-import type { PainLevel, PhaseId, Readiness, TrafficLight, UserProfile, WorkoutReaction } from '../domain/types'
+import type { Mood, PainLevel, PhaseId, Readiness, TrafficLight, UserProfile, WorkoutReaction } from '../domain/types'
 
 export type UserProgress = { id: 'me'; currentPhase: PhaseId; updatedAt: string }
 
@@ -45,9 +45,13 @@ export type DiastasisLog = {
 }
 
 export type Appointment = { id?: number; date: string; title: string; kind: 'midwife' | 'gynecology' | 'checkup' | 'custom'; note?: string }
+/** Optionaler Stimmungs-Check (Orientierung, keine Diagnose). */
+export type MoodLog = { id?: number; date: string; mood: Mood; note?: string }
 export type DailyHabit = { id?: number; date: string; habitId: string }
 export type SavedItem = { id: string; savedAt: string }
 export type AppSetting = { key: string; value: unknown }
+
+export type SyncProblem = 'server' | 'too_large' | 'rate_limited' | 'decrypt' | 'unknown'
 
 /** Zustand der Synchronisation (nur lokal, wird nie exportiert oder synchronisiert). */
 export type SyncState = {
@@ -64,6 +68,8 @@ export type SyncState = {
   conflict?: { serverVersion: number } | null
   /** Sitzung abgelaufen: erneut anmelden */
   loginRequired?: boolean
+  /** Letzte Ursache eines fehlgeschlagenen Abgleichs (für verständliche Hilfe), leer = alles gut */
+  lastError?: SyncProblem | null
 }
 
 export class AppDB extends Dexie {
@@ -76,6 +82,7 @@ export class AppDB extends Dexie {
   diastasisLogs!: EntityTable<DiastasisLog, 'id'>
   dailyHabits!: EntityTable<DailyHabit, 'id'>
   appointments!: EntityTable<Appointment, 'id'>
+  moodLogs!: EntityTable<MoodLog, 'id'>
   savedRecipes!: EntityTable<SavedItem, 'id'>
   savedTips!: EntityTable<SavedItem, 'id'>
   appSettings!: EntityTable<AppSetting, 'key'>
@@ -112,6 +119,8 @@ export class AppDB extends Dexie {
     this.version(3).stores({ appointments: '++id, date' })
     // v4: Sync-Zustand (Anmeldung, Schlüssel, Version)
     this.version(4).stores({ syncState: 'id' })
+    // v5: Stimmungs-Check
+    this.version(5).stores({ moodLogs: '++id, date' })
   }
 }
 

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Button, Card, WarningBanner } from '../components'
 import { db } from '../db/db'
 import { DEFAULT_EQUIPMENT, EQUIPMENT } from '../domain/equipment'
-import type { BirthType, EquipmentId } from '../domain/types'
+import type { BirthType, EquipmentId, GoalId } from '../domain/types'
+import { GOALS } from '../engine/goals'
 import { LoginForm } from '../sync/SyncForms'
 import { suggestStartPhase, type ActivityLevel } from '../engine/progression'
 import { daysBetween, todayISO } from '../hooks/useUserState'
@@ -19,6 +20,7 @@ export function Onboarding() {
   const [level, setLevel] = useState<ActivityLevel | ''>('')
   const [clearance, setClearance] = useState(false)
   const [equipment, setEquipment] = useState<EquipmentId[]>(DEFAULT_EQUIPMENT)
+  const [goals, setGoals] = useState<GoalId[]>([])
   const [accepted, setAccepted] = useState(false)
   const [login, setLogin] = useState(false)
   const valid = birthDate !== '' && birthDate <= todayISO() && birthType !== '' && level !== '' && accepted
@@ -30,6 +32,7 @@ export function Onboarding() {
     await db.userProfile.put({ id: 'me', birthDate, birthType, medicalClearance: clearance, createdAt: now })
     await db.userProgress.put({ id: 'me', currentPhase: suggestStartPhase(daysBetween(birthDate), level), updatedAt: now })
     await db.appSettings.put({ key: 'equipment', value: equipment })
+    if (goals.length > 0) await db.appSettings.put({ key: 'goals', value: goals })
   }
 
   if (login) {
@@ -91,6 +94,15 @@ export function Onboarding() {
             <label key={q.id} className="flex min-h-12 items-center gap-3">
               <input type="checkbox" className="size-5" checked={equipment.includes(q.id)} onChange={() => setEquipment((cur) => (cur.includes(q.id) ? cur.filter((x) => x !== q.id) : [...cur, q.id]))} />
               {q.label}
+            </label>
+          ))}
+        </fieldset>
+        <fieldset>
+          <legend className="mb-1 font-medium">Was ist dir wichtig? (freiwillig)</legend>
+          {GOALS.map((g) => (
+            <label key={g.id} className="flex min-h-12 items-center gap-3">
+              <input type="checkbox" className="size-5" checked={goals.includes(g.id)} onChange={() => setGoals((cur) => (cur.includes(g.id) ? cur.filter((x) => x !== g.id) : [...cur, g.id]))} />
+              {g.label}
             </label>
           ))}
         </fieldset>

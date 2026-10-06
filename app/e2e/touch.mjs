@@ -1,9 +1,11 @@
 // Touch-Flächen (>= 44 px) und Reduced Motion
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, checkIn, launch, onboard } from './helpers.mjs'
 
 const { browser, page: p } = await launch({ reducedMotion: 'reduce' })
 await onboard(p)
-const routes = ['/', '/check-in', '/library', '/pelvic-floor', '/progress', '/more', '/more/settings', '/more/recipes', '/more/tips', '/more/appointments', '/diastasis']
+await checkIn(p)
+await p.getByRole('heading', { name: /^Heute passt/ }).waitFor()
+const routes = ['/', '/more/normal', '/more/normal/lochia', '/more/wellbeing', '/more/data', '/library', '/pelvic-floor', '/progress', '/more', '/more/settings', '/more/recipes', '/more/tips', '/more/appointments', '/diastasis']
 let small = []
 for (const r of routes) {
   await p.goto(BASE + r)
