@@ -34,6 +34,8 @@ describe('Datenbank-Migration', () => {
     // v3: neue Tabelle ist nutzbar, alte Daten bleiben
     await db.appointments.add({ date: '2026-11-01', title: 'Nachuntersuchung', kind: 'checkup' })
     expect(await db.appointments.count()).toBe(1)
+    await db.moodLogs.add({ date: '2026-10-02', mood: 3 })
+    expect(await db.moodLogs.count()).toBe(1)
     expect(await db.workoutHistory.count()).toBe(1)
     db.close()
   })

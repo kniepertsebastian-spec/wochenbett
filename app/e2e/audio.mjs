@@ -1,6 +1,6 @@
 // Audio-Cues, Gong, Vibration, Wake Lock: API-Aufrufe per Spion und simulierter Zeit.
 // (Hörbarkeit und echtes Display-Verhalten lassen sich nur auf einem echten Gerät prüfen.)
-import { BASE, check, launch, onboard, startExercise } from './helpers.mjs'
+import { BASE, check, checkIn, launch, onboard, startExercise } from './helpers.mjs'
 
 const spies = () => {
   window.__spoken = []
@@ -22,6 +22,13 @@ const spies = () => {
   window.AudioContext = class extends RealAC { createOscillator() { window.__gongs++; return super.createOscillator() } }
 }
 
+// Feste Übung (Beckenkippen, 90 s, mit Atemrhythmus), damit die Zeitachse des Tests nicht von der Auswahl abhängt
+async function startPelvicTilt(p) {
+  await p.goto(BASE + '/library/pelvic-tilt')
+  await p.getByRole('button', { name: 'Diese Übung starten' }).click()
+  await p.getByRole('button', { name: 'Start', exact: true }).waitFor()
+}
+
 async function startRecovery(p, minutes = '2 Min') {
   await p.goto(BASE + '/library')
   await p.getByRole('button', { name: minutes, exact: true }).click()
@@ -37,7 +44,7 @@ async function startRecovery(p, minutes = '2 Min') {
   await p.goto(BASE + '/more/settings')
   await p.getByLabel('Vibration').click()
   await p.waitForTimeout(300)
-  await startRecovery(p)
+  await startPelvicTilt(p)
   await p.clock.runFor(30_000)
   check('Bereit-Modus: keine Ansagen, kein Gong vor dem Start', (await p.evaluate(() => window.__spoken)).length === 0 && (await p.evaluate(() => window.__gongs)) === 0)
   await p.getByRole('button', { name: 'Start', exact: true }).click()
@@ -69,10 +76,8 @@ async function startRecovery(p, minutes = '2 Min') {
   await p.addInitScript(spies)
   await p.clock.install(); await p.clock.resume()
   await onboard(p)
-  await p.goto(BASE + '/check-in?s=baby_sleeping')
-  for (const t of ['5', 'keine', 'nein', 'gut']) await p.getByText(t, { exact: true }).first().click()
-  await p.getByLabel('Nichts davon').check()
-  await p.getByRole('button', { name: 'Weiter' }).click()
+  await checkIn(p)
+  await p.getByRole('button', { name: 'Baby schläft', exact: true }).click()
   await p.getByRole('button', { name: 'Starten' }).click()
   await startExercise(p)
   await p.clock.runFor(70_000)

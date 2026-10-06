@@ -1,6 +1,6 @@
 // Sync im Browser: Konto anlegen auf Gerät A, Anmelden auf Gerät B, Hinweise, Fehlermeldungen.
 // Benötigt laufenden Sync-Server hinter /api (Einladungscode siehe INVITE_CODE, Standard: test-einladung).
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, launch, onboard, openHabits } from './helpers.mjs'
 
 const INVITE = process.env.INVITE_CODE ?? 'test-einladung'
 const NAME = `anna${Date.now() % 100000}`
@@ -43,21 +43,23 @@ await q.getByRole('button', { name: 'Anmelden' }).click()
 check('Falsches Passwort: verständliche Meldung', await q.getByText(/Name und Passwort passen nicht zusammen/).waitFor({ timeout: 15000 }).then(() => true, () => false))
 await q.getByLabel('Passwort', { exact: true }).fill(PW)
 await q.getByRole('button', { name: 'Anmelden' }).click()
-await q.getByRole('heading', { name: 'Heute' }).waitFor({ timeout: 20000 })
+await q.getByRole('heading', { name: 'Heute', exact: true }).waitFor({ timeout: 20000 })
 check('Gerät B hat die Daten von Gerät A (Profil, kein Onboarding)', await q.getByText(/Woche \d+ nach der Geburt/).isVisible())
 
 // Änderung auf B (Micro-Habit) kommt auf A an
+await openHabits(q)
 await q.getByLabel('Über die Seite aufstehen').click()
 await q.waitForTimeout(6000) // Verzögerung bis zum automatischen Abgleich
 await p.goto(BASE + '/more/sync')
 await p.getByRole('button', { name: 'Jetzt abgleichen' }).click()
 await p.waitForTimeout(1500)
 await p.goto(BASE)
-await p.getByRole('heading', { name: 'Heute' }).waitFor()
+await p.getByRole('heading', { name: 'Heute', exact: true }).waitFor()
+await openHabits(p)
 check('Änderung von B kam auf A an', await p.getByLabel('Über die Seite aufstehen').waitFor({ timeout: 5000 }).then(async () => p.getByLabel('Über die Seite aufstehen').isChecked(), () => false))
 
 // Lokal löschen meldet ab, Server-Daten bleiben
-await q.goto(BASE + '/more/settings')
+await q.goto(BASE + '/more/data')
 await q.getByRole('button', { name: 'Alle Daten löschen' }).click()
 check('Löschen-Dialog erklärt Sync-Abmeldung', await q.getByText(/vom Sync abgemeldet/).isVisible())
 await q.getByRole('button', { name: 'Endgültig löschen' }).click()
@@ -67,7 +69,7 @@ await q.getByLabel('Name', { exact: true }).fill(NAME)
 await q.getByLabel('Passwort', { exact: true }).fill(PW)
 await q.getByRole('button', { name: 'Anmelden' }).click()
 // Die Seite bleibt auf der Einstellungsseite, das Profil ist wieder da
-check('Nach lokalem Löschen: erneutes Anmelden holt die Daten zurück', await q.getByRole('heading', { name: 'Profil' }).waitFor({ timeout: 20000 }).then(() => true, () => false))
+check('Nach lokalem Löschen: erneutes Anmelden holt die Daten zurück', await q.getByRole('heading', { name: 'Deine Daten' }).waitFor({ timeout: 20000 }).then(async () => (await q.goto(BASE + '/more/settings'), q.getByRole('heading', { name: 'Profil' }).waitFor({ timeout: 20000 }))).then(() => true, () => false))
 
 for (const d of [A, B]) {
   const errs = d.errors.filter((e) => !/401|Failed to load resource/.test(e))

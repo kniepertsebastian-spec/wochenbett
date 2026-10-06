@@ -71,6 +71,8 @@ export type Exercise = {
   instructions: string[]
   /** Warum diese Übung sinnvoll ist, in einfachen Worten (Entwurf, siehe meta). */
   why: string
+  /** Ein Satz vor dem Start: worauf du achten sollst (Entwurf, siehe meta). */
+  focus: string
   breathing: string
   targetMuscles: string[]
   difficulty: 1 | 2 | 3 | 4 | 5
@@ -134,8 +136,14 @@ export type WorkoutReaction = 'good' | 'ok' | 'symptoms'
 /** `why`: nachvollziehbare Begründung, warum genau dieser Vorschlag entstanden ist. */
 export type Recommendation =
   | { kind: 'stop'; light: 'red'; reasons: RedFlagId[]; urgency: Urgency; why: string[] }
-  | { kind: 'recovery'; light: 'yellow' | 'green'; durationMin: 2 | 5 | 10; exercises: Exercise[]; why: string[] }
-  | { kind: 'workout'; light: 'green'; durationMin: 5 | 10 | 15; exercises: Exercise[]; allowProgression: boolean; why: string[] }
+  | { kind: 'recovery'; light: 'yellow' | 'green'; durationMin: 2 | 3 | 5 | 10; exercises: Exercise[]; why: string[] }
+  | { kind: 'workout'; light: 'green'; durationMin: 5 | 10 | 15 | 20; exercises: Exercise[]; allowProgression: boolean; why: string[] }
 
 /** Alltagssituation mit Baby (Phase 11). Ersetzt nie den Check-in. */
-export type Situation = 'baby_sleeping' | 'baby_arm' | 'one_hand' | 'exhausted' | 'five_min'
+export type Situation = 'baby_sleeping' | 'baby_arm' | 'one_hand' | 'exhausted' | 'five_min' | 'time_10_20'
+
+/** Persönliche Ziele (freiwillig). Sie ordnen Übungen um, ändern aber nie die Sicherheitslogik. */
+export type GoalId = 'pelvic_floor' | 'core' | 'back' | 'mobility' | 'energy' | 'confidence' | 'routine'
+
+/** Stimmung 1 (sehr schwer) bis 5 (sehr gut). Orientierung, keine Diagnose. */
+export type Mood = 1 | 2 | 3 | 4 | 5

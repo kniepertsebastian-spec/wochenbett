@@ -18,7 +18,13 @@ describe('Katalog', () => {
   })
   it('hat mindestens 20 Übungen, alle mit Erklärung (Warum)', () => {
     expect(exercises.length).toBeGreaterThanOrEqual(20)
-    for (const e of exercises) expect(e.why.length, e.id).toBeGreaterThan(40)
+    for (const e of exercises) {
+      expect(e.why.length, e.id).toBeGreaterThan(40)
+      expect(e.focus.length, `${e.id} focus`).toBeGreaterThan(20)
+    }
+  })
+  it('jede Übung kann sicher vereinfacht werden (Regression) oder ist bereits die einfachste Stufe', () => {
+    for (const e of exercises) expect(e.difficulty === 1 || e.regressions.length > 0, e.id).toBe(true)
   })
   it('hat kleine Übungen für nebenbei im Bett', () => {
     const bed = exercises.filter((e) => e.bedFriendly)
@@ -161,6 +167,21 @@ describe('Startphase', () => {
     expect(maxSelectablePhase(300, false)).toBe(3)
     expect(maxSelectablePhase(300, true)).toBe(4)
     expect(maxSelectablePhase(5, true)).toBe(1)
+  })
+})
+
+describe('Persönliche Ziele', () => {
+  it('Ziele sortieren Übungen um, ändern aber nie die Eignung', () => {
+    const base = recommend({ ...vaginal, currentPhase: 1 }, ok, exercises)
+    const pf = recommend({ ...vaginal, currentPhase: 1 }, ok, exercises, { goals: ['pelvic_floor'] })
+    const pfNames = (pf.kind === 'recovery' ? pf.exercises : []).map((e) => e.targetMuscles.includes('Beckenboden'))
+    expect(pfNames[0]).toBe(true)
+    expect(base.kind).toBe(pf.kind)
+    // Gesperrte Übungen bleiben gesperrt, egal welches Ziel
+    const user = { ...vaginal, currentPhase: 4 as const, birthType: 'cesarean' as const, daysSinceBirth: 10, medicalClearance: false }
+    const r = recommend(user, ok, exercises, { goals: ['core'] })
+    const list = r.kind === 'stop' ? [] : r.exercises
+    for (const e of list) expect(isEligible(e, user, ok)).toBe(true)
   })
 })
 

@@ -1,4 +1,4 @@
-import type { AppDB, SyncState } from '../db/db'
+import type { AppDB, SyncProblem, SyncState } from '../db/db'
 import { EXPORT_FORMAT, EXPORT_VERSION, exportAll, importAll, type ExportFile } from '../db/privacy'
 import { ApiError, type Api } from './api'
 import {
@@ -15,6 +15,19 @@ import {
   unwrapDek,
   wrapDek,
 } from './crypto'
+
+/** Ursache klassifizieren, damit die Oberfläche konkret helfen kann. */
+export function classifyError(e: unknown): SyncProblem {
+  if (e instanceof ApiError) {
+    if (e.status === 413) return 'too_large'
+    if (e.status === 429) return 'rate_limited'
+    if (e.status >= 500) return 'server'
+    return 'unknown'
+  }
+  if (e instanceof Error && (e.name === 'OperationError' || e.message === 'unsupported_snapshot')) return 'decrypt'
+  if (typeof DOMException !== 'undefined' && e instanceof DOMException && e.name === 'OperationError') return 'decrypt'
+  return 'unknown'
+}
 
 export type SyncResult = 'idle' | 'pushed' | 'pulled' | 'conflict' | 'offline' | 'login_required' | 'error'
 
@@ -36,14 +49,14 @@ export function createSync({ db, api, iterations = DEFAULT_KDF_ITERATIONS }: Syn
     const file = await decryptJson<ExportFile>(s.dek, blob)
     if (file?.format !== EXPORT_FORMAT || file.version > EXPORT_VERSION) throw new Error('unsupported_snapshot')
     await importAll(db, file)
-    await patch({ version, lastHash: await snapshotHash(await exportAll(db)), lastSyncAt: new Date().toISOString(), conflict: null, loginRequired: false })
+    await patch({ version, lastHash: await snapshotHash(await exportAll(db)), lastSyncAt: new Date().toISOString(), conflict: null, loginRequired: false, lastError: null })
   }
 
   async function push(s: SyncState, local: ExportFile, baseVersion: number): Promise<'pushed' | 'stale'> {
     const blob = await encryptJson(s.dek, local)
     try {
       const r = await api.putData(s.token, baseVersion, blob)
-      await patch({ version: r.version, lastHash: await snapshotHash(local), lastSyncAt: new Date().toISOString(), conflict: null, loginRequired: false })
+      await patch({ version: r.version, lastHash: await snapshotHash(local), lastSyncAt: new Date().toISOString(), conflict: null, loginRequired: false, lastError: null })
       return 'pushed'
     } catch (e) {
       if (e instanceof ApiError && e.status === 409) return 'stale'
@@ -67,7 +80,7 @@ export function createSync({ db, api, iterations = DEFAULT_KDF_ITERATIONS }: Syn
         const serverChanged = server.version > s.version
 
         if (!localChanged && !serverChanged) {
-          await patch({ lastSyncAt: new Date().toISOString(), loginRequired: false })
+          await patch({ lastSyncAt: new Date().toISOString(), loginRequired: false, lastError: null })
           return 'idle'
         }
         if (!serverChanged) {
@@ -88,6 +101,7 @@ export function createSync({ db, api, iterations = DEFAULT_KDF_ITERATIONS }: Syn
           await patch({ loginRequired: true })
           return 'login_required'
         }
+        await patch({ lastError: classifyError(e) })
         return 'error'
       }
     } finally {
@@ -150,7 +164,7 @@ export function createSync({ db, api, iterations = DEFAULT_KDF_ITERATIONS }: Syn
     const { salt, kdfIter } = await api.salt(s.username)
     const pw = await deriveFromPassword(password, salt, kdfIter)
     const r = await api.login(s.username, pw.authKey)
-    await patch({ token: r.token, dek: await unwrapDek(r.wrappedDekPw, pw.wrapKey), loginRequired: false })
+    await patch({ token: r.token, dek: await unwrapDek(r.wrappedDekPw, pw.wrapKey), loginRequired: false, lastError: null })
     return syncNow()
   }
 

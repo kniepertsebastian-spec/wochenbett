@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { BackLink, Button, Card, Modal, WarningBanner } from '../components'
-import { describeSyncError } from '../sync/messages'
+import { describeSyncError, syncProblemHelp } from '../sync/messages'
 import { LoginForm, RecoverForm, RegisterFlow } from '../sync/SyncForms'
 import { SyncInfo } from '../sync/SyncInfo'
 import { useSync } from '../sync/SyncProvider'
@@ -14,11 +14,11 @@ const statusText = {
   offline: 'Offline. Es wird automatisch nachgeholt, sobald du wieder Internet hast.',
   conflict: 'Konflikt: bitte entscheide unten, welcher Stand gelten soll.',
   login_required: 'Bitte melde dich erneut an.',
-  error: 'Der Abgleich hat nicht geklappt. Er wird automatisch wiederholt.',
+  error: 'Der Abgleich hat nicht geklappt.',
 } as const
 
 export function SyncPage() {
-  const { client, status, username, lastSyncAt, syncNow } = useSync()
+  const { client, status, username, lastSyncAt, problem, syncNow } = useSync()
   const [mode, setMode] = useState<Mode>('start')
   const [relogPw, setRelogPw] = useState('')
   const [delOpen, setDelOpen] = useState(false)
@@ -75,6 +75,15 @@ export function SyncPage() {
         {lastSyncAt && <p className="text-sm text-stone-600 dark:text-stone-400">Letzter Abgleich: {new Date(lastSyncAt).toLocaleString('de-DE')}</p>}
         <Button variant="secondary" onClick={() => void syncNow()}>Jetzt abgleichen</Button>
       </Card>
+
+      {status === 'error' && (
+        <Card className="space-y-2 border-2 border-amber-600" role="alert">
+          <h2 className="font-semibold">Das ist passiert</h2>
+          <p>{syncProblemHelp[problem ?? 'unknown'].text}</p>
+          <p><strong>Das kannst du tun:</strong> {syncProblemHelp[problem ?? 'unknown'].action}</p>
+          <Button variant="secondary" onClick={() => void syncNow()}>Erneut versuchen</Button>
+        </Card>
+      )}
 
       {status === 'conflict' && (
         <Card className="space-y-3 border-2 border-amber-600">

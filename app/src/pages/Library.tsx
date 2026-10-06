@@ -66,6 +66,11 @@ export function LibraryPage() {
         </div>
       </Card>
 
+      <Link to="/pelvic-floor" className="block rounded-2xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900">
+        <span className="block font-medium">Beckenboden</span>
+        <span className="block text-sm text-stone-600 dark:text-stone-400">Wahrnehmen, üben und Alltagssituationen</span>
+      </Link>
+
       <div role="tablist" aria-label="Ansicht" className="grid grid-cols-2 gap-2">
         <Button role="tab" aria-selected={tab === 'today'} variant={tab === 'today' ? 'primary' : 'secondary'} onClick={() => setTab('today')}>Für dich</Button>
         <Button role="tab" aria-selected={tab === 'all'} variant={tab === 'all' ? 'primary' : 'secondary'} onClick={() => setTab('all')}>Alle Übungen</Button>

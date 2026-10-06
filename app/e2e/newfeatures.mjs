@@ -1,5 +1,5 @@
 // Bett-Übungen, Übersicht aller Übungen, Hilfsmittel, Begründung, Startphase, Kalender, Einheit löschen, Auswahlliste im Dunkelmodus
-import { BASE, check, launch, onboard } from './helpers.mjs'
+import { BASE, check, checkIn, launch, onboard } from './helpers.mjs'
 
 const { browser, page: p, errors } = await launch({ colorScheme: 'dark' })
 await onboard(p, { birth: '2026-04-01', level: /Rückbildungskurs/ })
@@ -25,12 +25,10 @@ await p.getByRole('button', { name: '2 Min im Bett' }).click()
 await p.getByRole('button', { name: 'Start', exact: true }).waitFor()
 check('Bett-Set startet im Bereit-Modus', await p.getByText('Warum diese Übung?').isVisible())
 
-// Begründung im Plan
-await p.goto(BASE + '/check-in')
-for (const t of ['5', 'keine', 'nein', 'gut']) await p.getByText(t, { exact: true }).first().click()
-await p.getByLabel('Nichts davon').check()
-await p.getByRole('button', { name: 'Weiter' }).click()
-await p.getByText('Warum dieser Vorschlag?').click()
+// Begründung der Empfehlung
+await checkIn(p)
+await p.getByRole('heading', { name: /^Heute passt/ }).waitFor()
+await p.getByText('Warum?', { exact: true }).click()
 check('Begründung nennt Energie', await p.getByText(/Energie 5 von 5/).isVisible())
 
 // Kalender
@@ -55,13 +53,13 @@ await p.goto(BASE + '/library')
 await p.getByRole('button', { name: '2 Min', exact: true }).click()
 await p.getByRole('button', { name: 'Start', exact: true }).waitFor()
 for (let i = 0; i < 12; i++) {
-  if (await p.getByRole('heading', { name: 'Geschafft' }).isVisible()) break
+  if (await p.getByRole('heading', { name: /Heute reicht das/ }).isVisible()) break
   await p.getByRole('button', { name: 'Überspringen' }).click()
   await p.waitForTimeout(100)
 }
 await p.getByText('gut', { exact: true }).click()
 await p.getByRole('button', { name: 'Speichern' }).click()
-await p.getByRole('heading', { name: 'Heute' }).waitFor()
+await p.getByRole('heading', { name: 'Heute', exact: true }).waitFor()
 await p.goto(BASE + '/progress')
 await p.getByRole('button', { name: /Einheit vom .* löschen/ }).first().click()
 await p.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click()

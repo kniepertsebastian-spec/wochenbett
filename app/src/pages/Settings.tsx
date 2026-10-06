@@ -1,51 +1,20 @@
-import { useRef, useState } from 'react'
-import { Button, Card, Modal, WarningBanner } from '../components'
-import { db, requestPersistence } from '../db/db'
-import { deleteAllData, exportAll, importAll, ImportError } from '../db/privacy'
+import { Link } from 'react-router-dom'
+import { Card, WarningBanner } from '../components'
+import { db } from '../db/db'
 import type { BirthType } from '../domain/types'
 import { useSettings } from '../hooks/useSettings'
 import { DEFAULT_EQUIPMENT, EQUIPMENT } from '../domain/equipment'
 import type { EquipmentId } from '../domain/types'
 import { useProfile } from '../hooks/useUserState'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useSync } from '../sync/SyncProvider'
 
 export function SettingsPage() {
   const profile = useProfile()
-  const { client: syncClient, username: syncUser } = useSync()
   const [settings, set] = useSettings()
-  const [confirm, setConfirm] = useState(false)
-  const [msg, setMsg] = useState('')
-  const file = useRef<HTMLInputElement>(null)
   const owned = useLiveQuery(async () => ((await db.appSettings.get('equipment'))?.value as EquipmentId[] | undefined) ?? DEFAULT_EQUIPMENT, [])
   const toggleEquipment = (id: EquipmentId) => {
     const cur = owned ?? DEFAULT_EQUIPMENT
     return db.appSettings.put({ key: 'equipment', value: cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id] })
-  }
-
-  async function doExport() {
-    const data = await exportAll(db)
-    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }))
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `rueckbildung-export-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-    setMsg('Export erstellt. Die Datei liegt nur bei dir.')
-  }
-  async function doImport(f: File) {
-    try {
-      await importAll(db, JSON.parse(await f.text()))
-      setMsg('Import abgeschlossen.')
-    } catch (e) {
-      setMsg(e instanceof ImportError ? e.message : 'Die Datei konnte nicht gelesen werden.')
-    }
-  }
-  async function wipe() {
-    // Erst abmelden: sonst könnte der leere Stand später den Server-Stand überschreiben
-    await syncClient.logout()
-    await deleteAllData(db)
-    setConfirm(false)
   }
 
   const toggles: { key: 'speech' | 'gong' | 'vibration'; label: string }[] = [
@@ -108,25 +77,12 @@ export function SettingsPage() {
         </Card>
       )}
 
-      <Card className="space-y-3">
-        <h2 className="font-semibold">Deine Daten</h2>
-        <p className="text-stone-600 dark:text-stone-400">Alle Daten bleiben auf diesem Gerät. Es gibt keine Registrierung und kein Tracking.</p>
-        <Button variant="secondary" onClick={doExport}>Daten exportieren (JSON)</Button>
-        <Button variant="secondary" onClick={() => file.current?.click()}>Daten importieren</Button>
-        <input ref={file} type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files?.[0] && doImport(e.target.files[0])} />
-        <Button variant="secondary" onClick={() => requestPersistence().then((ok) => setMsg(ok ? 'Speicher wird vom Browser geschützt.' : 'Der Browser hat den Schutz nicht zugesagt. Exportiere deine Daten regelmäßig.'))}>Speicher schützen lassen</Button>
-        <Button variant="ghost" onClick={() => setConfirm(true)}>Alle Daten löschen</Button>
-        {msg && <p role="status">{msg}</p>}
-      </Card>
+      <Link to="/more/data" className="block rounded-2xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900">
+        <span className="block font-medium">Deine Daten: Export, Import, Löschen</span>
+        <span className="block text-sm text-stone-600 dark:text-stone-400">Was gespeichert wird und wo</span>
+      </Link>
       <WarningBanner level="yellow">Keine Diagnostik, keine Therapie. Die App ersetzt keine Hebamme, Physiotherapeutin oder Ärztin.</WarningBanner>
 
-      <Modal open={confirm} title="Alle Daten löschen?" onClose={() => setConfirm(false)}>
-        <p className="mb-4">Dies löscht dein Profil, alle Einträge und Einstellungen auf diesem Gerät. Das kann nicht rückgängig gemacht werden.{syncUser ? ' Du wirst auch vom Sync abgemeldet. Deine gesicherten Daten auf dem Server bleiben erhalten und kommen nach erneutem Anmelden zurück.' : ''}</p>
-        <div className="grid gap-2">
-          <Button onClick={wipe}>Endgültig löschen</Button>
-          <Button variant="ghost" onClick={() => setConfirm(false)}>Abbrechen</Button>
-        </div>
-      </Modal>
     </main>
   )
 }
